@@ -2477,6 +2477,7 @@
         </div>
     </div>
 </div>
+    <script src="chapters_39_45_content.js"></script>
     <script>
 // =====================================================
 // Data: 66 Chapters
@@ -8056,6 +8057,13 @@ const chapterContent = {
     ]
   },
 };
+
+// =====================================================
+// Merge chapters 39-45 content
+// =====================================================
+if (typeof chapters_39_45_Content !== 'undefined') {
+  Object.assign(chapterContent, chapters_39_45_Content);
+}
 
 // =====================================================
 // LocalStorage Helpers

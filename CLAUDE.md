@@ -1,0 +1,269 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## 项目说明
+
+这是一个《Programming World Landscape》（编程世界全貌）指南项目，面向编程小白和 aspiring indie developers。项目生成两种输出：
+
+1. **coder-landscape.html** - 交互式网页，带侧边导航、进度追踪、AI搜索
+2. **generate-coder-landscape.js** - 生成横版A4 Word文档的Node.js脚本
+
+## 运行命令
+
+```bash
+# 生成横版A4 Word文档
+node generate-coder-landscape.js
+# 输出：coder-landscape-guide.docx
+
+# 本地预览网页
+npx serve coder-landscape.html
+```
+
+安装依赖（docx包只能本地安装）：
+```bash
+npm install
+```
+
+## 文档规格
+
+### 整体结构
+
+- **总章节数**：66章（见下方完整列表）
+- **每章结构**：12个固定板块（见下方）
+- **格式**：中文为主，专业术语保留英文
+- **AI时代视角**：每章需区分"AI能做的"vs"人必须理解的"
+
+### 12章节标准结构
+
+```
+01 · 这是什么         → 专业解释 + 大白话解释 + 2026现状
+02 · 做什么           → 5-8条工作内容 bullet list
+03 · 细分有哪些       → 表格（子方向 | 一句话说明）
+04 · 核心工具/语言    → 工具列表 + 是否有AI原生版本
+05 · AI 工具清单      → 表格（AI工具 | 用在哪）
+06 · 最小可行知识     → ✅必须掌握 vs ❌不需要（初期）
+07 · 变现路径         → 表格（排序|方式|说明|个人能干|见效速度|参考收入）
+08 · AI 冲击评估     → 替代风险 / 增强程度 / 新机会
+09 · 避坑清单         → 【致命级】5条 + 【重伤级】10条 + 【中伤级】5条
+10 · 掌握路径        → AI时代版：人必须理解的（大白话+专业）+ AI能做的
+11 · 中文最佳资源    → 首推 + 在线 + 进阶（各1-2个）
+12 · 如何入门        → 第一步行动清单（4步内）
+```
+
+### 变现路径排序算法
+
+**加权排序**：睡后收入权重70% + 收入天花板权重30%
+
+| 排序 | 计算逻辑 |
+|------|---------|
+| 1 | 高被动收入 + 高收入天花板 → Micro-SaaS, API即服务 |
+| 2 | 高被动收入 + 中收入天花板 → 在线课程, 开源赞助 |
+| 3 | 中被动收入 + 高收入天花板 → 技术咨询, 架构顾问 |
+| 4 | 低被动收入 + 中收入天花板 → 外包接单, 自动化脚本 |
+
+**个人可行性标识**：
+- 🔴 个人可独立搞定
+- 🟡 建议小团队
+- 🟢 需要团队
+
+### 变现路径详尽度要求
+
+**核心原则：不设上限，追求详尽**
+
+1. **数量无限制**：每个章节的变现路径条目不设固定数量，通过调研能找到多少条就写多少条
+2. **覆盖维度**：
+   - 高被动收入（睡后收入）：开源赞助、模板销售、API服务、SaaS产品等
+   - 中被动收入：在线课程、技术书籍、付费社群等
+   - 主动收入：外包接单、技术咨询、企业培训等
+3. **调研来源**（必须参考）：
+   - 国内平台：程序员客栈、码市、猪八戒、知乎、掘金、CSDN、知识星球
+   - 国际平台：GitHub Sponsors、Upwork、Freelancer、Gumroad、Patreon、Codecanyon
+   - 知识付费：掘金小册、极客时间、稀土掘金课程、微信生态（公众号/视频号）
+   - 独立开发：Product Hunt、Indie Hackers、小报童
+4. **质量要求**：
+   - 每条路径必须基于实际调研，注明参考来源（如"程序员客栈2025数据"）
+   - 收入数据用区间表示，反映真实市场行情
+   - 优先列出个人独立开发者可执行的变现方式
+
+### 颜色编码
+
+- **背景**：#0a0e1a（深蓝黑）
+- **强调色**：#00ff88（霓虹绿）
+- **正文**：#e0e0e0（浅灰）
+- **表格边框**：#1a2332
+
+## 66章完整目录
+
+### 基础开发方向（1-10）
+1. 前端开发 Frontend
+2. 移动端开发 Mobile
+3. 后端开发 Backend
+4. 数据库开发 Database
+5. 全栈开发 Full Stack
+6. 桌面应用开发 Desktop
+7. 小程序开发 Mini Program
+8. 低代码/无代码 Low Code
+9. API开发 API Development
+10. DevOps开发 DevOps
+
+### 游戏与娱乐（11-16）
+11. 游戏开发 Game Development
+12. 抖音小游戏 TikTok Mini Games
+13. 独立游戏 Indie Game
+14. 游戏MOD开发 Game MOD
+15. 电竞技术 Esports Tech
+16. 元宇宙开发 Metaverse
+
+### 人工智能方向（17-24）
+17. 机器学习 ML
+18. 深度学习 Deep Learning
+19. 自然语言处理 NLP
+20. 计算机视觉 CV
+21. 推荐系统 Recommendation
+22. 具身智能 Embodied AI
+23. AI应用开发 AI App Dev
+24. 大模型微调 LLM Fine-tuning
+
+### 数据与商业（25-32）
+25. 数据分析 Data Analysis
+26. 商业智能 BI
+27. 数据工程 Data Engineering
+28. 量化交易 Quant Trading
+29. 增长黑客 Growth Hacking
+30. 产品管理 Product Management
+31. 技术写作 Technical Writing
+32. 技术咨询 Tech Consulting
+
+### 安全与系统（33-38）
+33. 网络安全 Cybersecurity
+34. 渗透测试 Penetration Testing
+35. 区块链开发 Blockchain
+36. 智能合约 Smart Contract
+37. Web3开发 Web3 Development
+38. 密码学 Cryptography
+
+### 云计算与基础设施（39-45）
+39. 云计算 Cloud Computing
+40. 云原生 Cloud Native
+41. 容器技术 Container
+42. Kubernetes
+43. Serverless
+44. 边缘计算 Edge Computing
+45. 物联网 IoT
+
+### 内容创作与媒体（46-52）
+46. 技术视频 Tech Video
+47. 技术播客 Tech Podcast
+48. 直播技术 Live Streaming
+49. 音视频开发 Multimedia
+50. 3D建模与渲染 3D Graphics
+51. 数字人 Digital Human
+52. AI绘画 AI Art
+
+### 自动化与工具（53-58）
+53. 爬虫开发 Web Scraping
+54. 自动化测试 Test Automation
+55. RPA机器人 RPA
+56. 浏览器插件 Browser Extension
+57. VSCode插件开发 VSCode Extension
+58. CLI工具开发 CLI Tools
+
+### 新兴与前沿（59-66）
+59. 机器人编程 Robotics
+60. 无人机开发 Drone
+61. 嵌入式开发 Embedded
+62. 自动驾驶 Autonomous Driving
+63. AR/VR开发 AR/VR
+64. 空间计算 Spatial Computing
+65. 脑机接口 BCI
+66. 量子计算 Quantum Computing
+
+## 关键约定
+
+### 写作风格
+
+1. **大白话必须接地气**：
+   - ❌ 错误："RESTful API是一种架构风格"
+   - ✅ 正确："就像餐厅菜单——你点啥（请求），厨房做啥（处理），服务员端上来（响应）"
+
+2. **AI能做vs人要做清晰区分**：
+   - AI能做的：列出具体场景（如"生成CRUD代码"）
+   - 人必须做的：强调为什么AI替代不了（如"架构选型决策"）
+
+3. **变现路径必须带来源**：
+   - 每条路径注明参考来源（如"程序员客栈2025"）
+   - 收入数据用区间（如"5千-10万/单"）
+
+### 表格格式规范
+
+- 使用ASCII表格，边框用 `┌─┬─┐` 风格
+- 表头居中对齐
+- 内容左对齐，数字/标识居中
+- 换行内容用多行表示
+
+### HTML输出规范
+
+- 响应式设计，支持移动端
+- 侧边栏导航（可折叠）
+- 阅读进度条
+- AI搜索框（调用Claude API，带法律合规提示）
+- 收藏/标记功能（LocalStorage）
+
+### Word输出规范
+
+- A4横版（16838×11906 DXA）
+- 页边距850 DXA
+- 两栏布局（左内容右笔记）
+- 页脚居中页码
+- 单色调色板（#222222, #333333等）
+
+## AI搜索功能规格
+
+```javascript
+// 搜索框组件
+- 位置：顶部固定
+- 占位符："询问AI关于本文的问题..."
+- 提示文字："AI回答仅供参考，关键决策请核实官方文档"
+
+// API调用
+- 使用Claude API (claude-3-5-sonnet-20241022)
+- 携带当前章节内容作为context
+- temperature: 0.3（降低幻觉）
+
+// 合规提示
+- 首次使用显示："AI生成内容可能不准确，请结合官方文档验证"
+- 法律相关内容显示："请咨询专业律师，本文不构成法律建议"
+```
+
+## 文件结构
+
+```
+coderstudy/
+├── CLAUDE.md                      # 本文件
+├── generate-coder-landscape.js    # Word生成脚本
+├── coder-landscape.html           # 主网页文件
+├── package.json                   # 依赖
+├── /chapters                      # 章节源文件（可选）
+│   ├── 01-frontend.md
+│   ├── 02-mobile.md
+│   └── ...
+└── /assets                        # 静态资源
+    ├── logo.png
+    └── styles.css
+```
+
+## 生成流程
+
+1. **读取模板**：读取CLAUDE.md获取规格
+2. **遍历章节**：按66章目录逐个生成内容
+3. **渲染HTML**：生成带导航和交互的网页
+4. **渲染DOCX**：使用docx库生成Word文档
+5. **输出文件**：保存到根目录
+
+## 注意事项
+
+- 所有引用必须带来源链接
+- 收入数据基于2026年市场调研
+- AI工具信息需验证最新版本
+- 定期更新（建议每季度）

@@ -1,0 +1,1760 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code 全面学习指南</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0e1a;--bg2:#0d1224;--bgc:#111827;--bgs:#080c18;
+  --acc:#00ff88;--acc2:#00cc6a;--glow:rgba(0,255,136,0.15);
+  --t1:#e2e8f0;--t2:#94a3b8;--tm:#64748b;
+  --bd:#1e293b;--bda:rgba(0,255,136,0.3);
+  --fm:"Space Mono","IBM Plex Mono",monospace;
+  --fb:"IBM Plex Sans",system-ui,sans-serif;
+  --sw:280px;--hh:56px
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--fb);background:var(--bg);color:var(--t1);min-height:100vh;overflow-x:hidden}
+#gpb{position:fixed;top:0;left:0;right:0;height:3px;background:var(--bd);z-index:1000}
+#gpf{height:100%;background:linear-gradient(90deg,var(--acc),#00ccff,var(--acc));background-size:200% 100%;animation:shimmer 2s linear infinite;transition:width 0.5s ease;width:0%}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+#hdr{position:fixed;top:3px;left:0;right:0;height:var(--hh);background:rgba(8,12,24,0.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--bd);display:flex;align-items:center;padding:0 1.5rem;gap:1rem;z-index:100}
+#menu-btn{display:none;width:40px;height:40px;align-items:center;justify-content:center;background:none;border:1px solid var(--bd);border-radius:4px;color:var(--t2);cursor:pointer;font-size:1.25rem;transition:all .2s}
+#menu-btn:hover{color:var(--acc);border-color:var(--acc)}
+.logo{font-family:var(--fm);font-size:1rem;color:var(--acc);white-space:nowrap}
+.logo span{color:var(--t2)}
+#pt{font-family:var(--fm);font-size:0.75rem;color:var(--tm);margin-left:auto}
+#pt strong{color:var(--acc)}
+#app{display:flex;padding-top:calc(var(--hh) + 3px);min-height:100vh}
+#sb{position:fixed;top:calc(var(--hh)+3px);left:0;width:var(--sw);height:calc(100vh - var(--hh) - 3px);background:var(--bgs);border-right:1px solid var(--bd);overflow-y:auto;overflow-x:hidden;z-index:50;scrollbar-width:thin;scrollbar-color:var(--bd) transparent}
+#sb::-webkit-scrollbar{width:4px}
+#sb::-webkit-scrollbar-thumb{background:var(--bd);border-radius:2px}
+.sh{font-family:var(--fm);font-size:0.65rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--tm);padding:1.25rem 1.25rem 0.5rem}
+.ni{display:flex;align-items:center;gap:0.75rem;padding:0.6rem 1.25rem;cursor:pointer;transition:all 0.15s;border-left:2px solid transparent;font-size:0.875rem;color:var(--t2);user-select:none}
+.ni:hover{background:rgba(255,255,255,0.03);color:var(--t1)}
+.ni.active{color:var(--acc);border-left-color:var(--acc);background:var(--glow)}
+.nn{font-family:var(--fm);font-size:0.7rem;color:var(--tm);min-width:1.5rem}
+.ni.active .nn{color:var(--acc)}
+.ck{margin-left:auto;color:var(--acc);font-size:0.75rem;opacity:0;transition:opacity 0.2s}
+.ni.done .ck{opacity:1}
+.ni.done{color:var(--acc2)}
+#ct{margin-left:var(--sw);flex:1;max-width:calc(100% - var(--sw));padding:2.5rem 3rem}
+.ch{display:none;animation:fi 0.3s ease;max-width:860px;margin:0 auto}
+.ch.active{display:block}
+@keyframes fi{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.chhd{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--bd)}
+.chlb{font-family:var(--fm);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.2em;color:var(--acc);margin-bottom:0.5rem}
+.chtl{font-family:var(--fm);font-size:1.9rem;font-weight:700;color:var(--t1);line-height:1.2;margin-bottom:0.75rem}
+.chds{color:var(--t2);font-size:0.95rem;line-height:1.7}
+h2{font-family:var(--fm);font-size:1.15rem;color:var(--t1);margin:2rem 0 1rem;display:flex;align-items:center;gap:0.75rem}
+h2::before{content:"";display:inline-block;width:3px;height:1.1em;background:var(--acc);border-radius:1px}
+h3{font-family:var(--fm);font-size:0.95rem;color:var(--acc2);margin:1.5rem 0 0.75rem}
+p{color:var(--t2);line-height:1.75;margin-bottom:1rem;font-size:0.925rem}
+strong{color:var(--t1);font-weight:600}
+code{font-family:var(--fm);font-size:0.82em;background:rgba(0,255,136,0.07);border:1px solid rgba(0,255,136,0.2);border-radius:3px;padding:0.1em 0.4em;color:#7dd3fc}
+.cb{background:#0d1117;border:1px solid var(--bd);border-radius:8px;margin:1.25rem 0;overflow:hidden}
+.cbh{display:flex;align-items:center;padding:0.5rem 1rem;background:#161b22;border-bottom:1px solid var(--bd);gap:0.5rem}
+.dots{display:flex;gap:6px}
+.dots span{width:10px;height:10px;border-radius:50%}
+.dots span:nth-child(1){background:#ff5f57}
+.dots span:nth-child(2){background:#febc2e}
+.dots span:nth-child(3){background:#28c840}
+.clg{font-family:var(--fm);font-size:0.7rem;color:var(--tm);margin-left:auto}
+.cb pre{margin:0;padding:1.25rem;overflow-x:auto;font-size:0.82rem;line-height:1.6}
+.cb pre code{background:none;border:none;padding:0;font-size:inherit;color:inherit}
+.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin:1.25rem 0}
+.card{background:var(--bgc);border:1px solid var(--bd);border-radius:8px;padding:1.25rem;transition:border-color 0.2s,transform 0.2s}
+.card:hover{border-color:var(--bda);transform:translateY(-1px)}
+.ci{font-size:1.5rem;margin-bottom:0.75rem}
+.ct{font-family:var(--fm);font-size:0.875rem;color:var(--t1);margin-bottom:0.4rem;font-weight:700}
+.cd{font-size:0.8rem;color:var(--tm);line-height:1.5}
+.box{border-radius:6px;padding:1rem 1.25rem;margin:1.25rem 0;border-left:3px solid;font-size:0.875rem}
+.box.tip{background:rgba(0,255,136,0.05);border-color:var(--acc)}
+.box.tip .bl{color:var(--acc)}
+.box.warn{background:rgba(251,191,36,0.05);border-color:#fbbf24}
+.box.warn .bl{color:#fbbf24}
+.box.note{background:rgba(96,165,250,0.05);border-color:#60a5fa}
+.box.note .bl{color:#60a5fa}
+.bl{font-family:var(--fm);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.4rem}
+.box p{margin:0;color:var(--t2)}
+.tw{overflow-x:auto;margin:1.25rem 0;border-radius:8px;border:1px solid var(--bd)}
+table{width:100%;border-collapse:collapse;font-size:0.85rem}
+th{font-family:var(--fm);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--tm);padding:0.75rem 1rem;border-bottom:1px solid var(--bd);text-align:left;background:var(--bgc)}
+td{padding:0.65rem 1rem;border-bottom:1px solid rgba(30,41,59,0.5);color:var(--t2);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,0.01)}
+td:first-child{font-family:var(--fm);font-size:0.8rem;color:var(--acc)}
+ul,ol{color:var(--t2);line-height:1.75;font-size:0.925rem;padding-left:1.5rem;margin-bottom:1rem}
+li{margin-bottom:0.25rem}
+li::marker{color:var(--acc)}
+.chft{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--bd);display:flex;align-items:center;gap:1rem}
+.btn{font-family:var(--fm);font-size:0.8rem;padding:0.65rem 1.5rem;background:transparent;border:1px solid var(--acc);color:var(--acc);border-radius:4px;cursor:pointer;transition:all 0.2s;letter-spacing:0.05em}
+.btn:hover{background:var(--acc);color:#000}
+.btn.done{background:var(--acc);color:#000;cursor:default}
+.dm{font-family:var(--fm);font-size:0.75rem;color:var(--tm)}
+.badge{display:inline-block;font-family:var(--fm);font-size:0.65rem;padding:0.15em 0.5em;border-radius:3px;text-transform:uppercase;letter-spacing:0.05em;margin:0 0.15em;vertical-align:middle}
+.g{background:rgba(0,255,136,0.1);color:var(--acc);border:1px solid var(--bda)}
+.b{background:rgba(96,165,250,0.1);color:#60a5fa;border:1px solid rgba(96,165,250,0.3)}
+.y{background:rgba(251,191,36,0.1);color:#fbbf24;border:1px solid rgba(251,191,36,0.3)}
+.r{background:rgba(248,113,113,0.1);color:#f87171;border:1px solid rgba(248,113,113,0.3)}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}
+@media(max-width:768px){:root{--sw:0px}#sb{display:none;position:fixed;top:calc(var(--hh)+3px);left:0;width:100vw;height:calc(100vh - var(--hh) - 3px);background:rgba(8,12,24,0.98);z-index:80}#sb.open{display:block}#menu-btn{display:flex}#ct{margin-left:0;max-width:100%;padding:1.5rem}#ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:60}#ov.show{display:block}}
+</style>
+</head>
+<body>
+<div id="gpb"><div id="gpf"></div></div>
+<header id="hdr">
+  <button id="menu-btn" onclick="toggleMenu()">☰</button>
+  <div class="logo">$ <span>claude-code</span> --guide</div>
+  <div id="pt"><strong>0</strong> / 8 完成</div>
+</header>
+<div id="app">
+<nav id="sb">
+  <div class="sh">课程目录</div>
+  <div class="ni active" onclick="showCh(0)" id="n0"><span class="nn">00</span><span>概览与入门</span><span class="ck">✓</span></div>
+  <div class="ni" onclick="showCh(1)" id="n1"><span class="nn">01</span><span>安装与基础配置</span><span class="ck">✓</span></div>
+  <div class="ni" onclick="showCh(2)" id="n2"><span class="nn">02</span><span>核心工具与工作流</span><span class="ck">✓</span></div>
+  <div class="ni" onclick="showCh(3)" id="n3"><span class="nn">03</span><span>记忆与上下文管理</span><span class="ck">✓</span></div>
+  <div class="ni" onclick="showCh(4)" id="n4"><span class="nn">04</span><span>Hooks 系统</span><span class="ck">✓</span></div>
+  <div class="ni" onclick="showCh(5)" id="n5"><span class="nn">05</span><span>MCP 协议</span><span class="ck">✓</span></div>
+  <div class="ni" onclick="showCh(6)" id="n6"><span class="nn">06</span><span>Claude API &amp; SDK</span><span class="ck">✓</span></div>
+  <div class="ni" onclick="showCh(7)" id="n7"><span class="nn">07</span><span>Agent SDK &amp; 多Agent</span><span class="ck">✓</span></div>
+  <div class="ni" onclick="showCh(8)" id="n8"><span class="nn">AP</span><span>附录与速查表</span><span class="ck">✓</span></div>
+</nav>
+<main id="ct">
+<!-- CHAPTER 0: OVERVIEW -->
+<section class="ch active" id="ch0">
+<div class="chhd">
+  <div class="chlb">欢迎</div>
+  <h1 class="chtl">Claude Code 全面学习指南</h1>
+  <p class="chds">从零到高阶，系统掌握 Claude Code CLI、Claude API、MCP 协议与 Agent SDK 的完整知识体系。共 7 章核心内容 + 附录，涵盖所有实战技能。</p>
+</div>
+<div class="cg">
+  <div class="card"><div class="ci">🚀</div><div class="ct">快速入门</div><div class="cd">第 01 章：安装、配置、首次运行，5 分钟启动 Claude Code</div></div>
+  <div class="card"><div class="ci">🔧</div><div class="ct">工具精通</div><div class="cd">第 02 章：掌握所有内置工具、Slash Commands 与快捷键</div></div>
+  <div class="card"><div class="ci">🧠</div><div class="ct">记忆管理</div><div class="cd">第 03 章：MEMORY.md、上下文压缩与持久化策略</div></div>
+  <div class="card"><div class="ci">🪝</div><div class="ct">Hooks 自动化</div><div class="cd">第 04 章：事件驱动的 Hooks 系统，自动化工作流</div></div>
+  <div class="card"><div class="ci">🔌</div><div class="ct">MCP 生态</div><div class="cd">第 05 章：Model Context Protocol，扩展 Claude 能力边界</div></div>
+  <div class="card"><div class="ci">⚡</div><div class="ct">API 集成</div><div class="cd">第 06 章：Claude API、Python/Node SDK 完整实战</div></div>
+  <div class="card"><div class="ci">🤖</div><div class="ct">Agent 系统</div><div class="cd">第 07 章：Agent SDK，构建多 Agent 协作系统</div></div>
+  <div class="card"><div class="ci">📋</div><div class="ct">速查附录</div><div class="cd">附录：完整命令速查、配置参考、FAQ</div></div>
+</div>
+<h2>学习路径建议</h2>
+<p><strong>初学者：</strong>按顺序从第 01 章开始，每章完成后点击"标记完成"追踪进度。</p>
+<p><strong>有经验用户：</strong>直接跳至感兴趣章节，左侧目录随时切换。</p>
+<p><strong>API 开发者：</strong>建议重点学习第 06、07 章，了解 SDK 最佳实践。</p>
+<div class="box tip"><div class="bl">💡 提示</div><p>所有代码示例均可直接复制使用。进度会自动保存在浏览器本地，关闭页面不会丢失。</p></div>
+<div class="chft">
+  <button class="btn" onclick="markDone(0,this)">标记完成 ✓</button>
+  <span class="dm">完成后将进入第 01 章</span>
+</div>
+</section>
+<!-- CHAPTER 1: INSTALLATION & BASICS -->
+<section class="ch" id="ch1">
+<div class="chhd">
+  <div class="chlb">第 01 章</div>
+  <h1 class="chtl">安装与基础配置</h1>
+  <p class="chds">从零开始安装 Claude Code，了解目录结构，配置 CLAUDE.md，掌握权限模式与启动参数。</p>
+</div>
+
+<h2>什么是 Claude Code</h2>
+<p>Claude Code 是 Anthropic 官方出品的 <strong>AI 编程 CLI 工具</strong>，让 Claude 直接在你的终端中运行，能够读写文件、执行命令、调用 Git、调用外部 API——是真正在你本地环境中动手写代码的 AI 助手。</p>
+<div class="cg">
+  <div class="card"><div class="ct">终端原生</div><div class="cd">直接在 bash/zsh 中运行，无需 GUI，完全 CLI 工作流</div></div>
+  <div class="card"><div class="ct">文件系统访问</div><div class="cd">可读写本地文件，理解整个项目上下文</div></div>
+  <div class="card"><div class="ct">工具调用</div><div class="cd">内置 Read、Write、Edit、Bash、Grep 等工具</div></div>
+  <div class="card"><div class="ct">可扩展</div><div class="cd">通过 MCP、Hooks 无限扩展能力</div></div>
+</div>
+
+<h2>安装方式</h2>
+<h3>方式一：npm（推荐）</h3>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">bash</span></div>
+<pre><code class="language-bash"># 全局安装
+npm install -g @anthropic-ai/claude-code
+
+# 验证安装
+claude --version
+
+# 首次运行（会引导认证）
+claude</code></pre></div>
+
+<h3>方式二：Homebrew（macOS）</h3>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">bash</span></div>
+<pre><code class="language-bash">brew install claude-code</code></pre></div>
+
+<div class="box tip"><div class="bl">💡 认证</div><p>首次运行会打开浏览器进行 Anthropic 账号认证。需要有效的 Claude Pro 或 API 账号。</p></div>
+
+<h2>目录结构</h2>
+<p>Claude Code 在项目中查找以下文件（按优先级）：</p>
+<div class="tw"><table>
+<tr><th>文件/目录</th><th>位置</th><th>作用</th></tr>
+<tr><td>CLAUDE.md</td><td>项目根目录</td><td>项目级指令，自动注入每次对话</td></tr>
+<tr><td>CLAUDE.md</td><td>~/ 用户主目录</td><td>全局用户偏好设置</td></tr>
+<tr><td>.claude/settings.json</td><td>项目根目录</td><td>项目级配置（权限、Hooks 等）</td></tr>
+<tr><td>~/.claude/settings.json</td><td>用户目录</td><td>全局配置</td></tr>
+<tr><td>~/.claude/projects/</td><td>用户目录</td><td>会话历史存储</td></tr>
+</table></div>
+
+<h2>CLAUDE.md 配置详解</h2>
+<p>CLAUDE.md 是最重要的配置文件，每次对话都会自动加载。它告诉 Claude 关于你项目的一切。</p>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">markdown (CLAUDE.md)</span></div>
+<pre><code class="language-markdown"># 项目说明
+这是一个 React + TypeScript 电商项目。
+
+## 技术栈
+- Frontend: React 18, TypeScript, Tailwind CSS
+- Backend: Node.js, Express, PostgreSQL
+- 测试: Jest, Playwright
+
+## 编码规范
+- 使用 2 空格缩进
+- 函数命名用 camelCase
+- 组件命名用 PascalCase
+- 所有新功能必须有测试
+
+## 常用命令
+- 启动开发服务器: `npm run dev`
+- 运行测试: `npm test`
+- 构建: `npm run build`
+
+## 注意事项
+- 不要直接修改 dist/ 目录
+- 提交前运行 `npm run lint`
+- 数据库迁移文件不要手动修改</code></pre></div>
+
+<h2>权限模式</h2>
+<div class="tw"><table>
+<tr><th>模式</th><th>说明</th><th>适用场景</th></tr>
+<tr><td>默认（手动）</td><td>每个敏感操作需用户确认</td><td>日常使用，安全第一</td></tr>
+<tr><td>--dangerously-skip-permissions</td><td>跳过所有权限检查，完全自动</td><td>自动化脚本、CI 环境</td></tr>
+</table></div>
+
+<div class="box warn"><div class="bl">⚠️ 警告</div><p>在生产环境中谨慎使用 --dangerously-skip-permissions，该模式下 Claude 可以无限制执行任何操作。</p></div>
+
+<h2>常用启动参数</h2>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">bash</span></div>
+<pre><code class="language-bash"># 指定模型
+claude --model claude-opus-4-6
+
+# 非交互模式（输出到 stdout）
+claude --print "帮我解释这段代码"
+
+# 从文件读取提示
+cat prompt.txt | claude --print
+
+# 继续上次会话
+claude --continue
+
+# 恢复特定会话（通过 session ID）
+claude --resume abc123
+
+# 禁用颜色输出（用于管道）
+claude --no-color
+
+# 指定工作目录
+claude --cwd /path/to/project
+
+# 输出 JSON 格式
+claude --output-format json --print "任务"
+
+# 详细模式
+claude --verbose</code></pre></div>
+
+<h2>首次工作流实战</h2>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">bash</span></div>
+<pre><code class="language-bash"># 1. 进入项目目录
+cd my-project
+
+# 2. 启动 Claude Code
+claude
+
+# 3. 在交互界面中输入任务
+# > 帮我分析这个项目的结构，然后找出所有未处理的 TODO 注释
+
+# 4. Claude 会自动使用工具：
+# - Glob 列举文件
+# - Read 读取文件内容
+# - Grep 搜索 TODO 注释
+# - 输出整理后的结果</code></pre></div>
+
+<div class="chft">
+  <button class="btn" onclick="markDone(1,this)">标记完成 ✓</button>
+  <span class="dm">下一章：核心工具与工作流</span>
+</div>
+</section>
+<!-- CHAPTER 2: TOOLS & WORKFLOW -->
+<section class="ch" id="ch2">
+<div class="chhd">
+  <div class="chlb">第 02 章</div>
+  <h1 class="chtl">核心工具与工作流</h1>
+  <p class="chds">掌握 Claude Code 的所有内置工具、Slash Commands、键盘快捷键，以及与 Git 的深度集成。</p>
+</div>
+
+<h2>内置工具全览</h2>
+<div class="tw"><table>
+<tr><th>工具</th><th>功能</th><th>典型用途</th></tr>
+<tr><td>Read</td><td>读取文件内容</td><td>分析代码、查看配置文件</td></tr>
+<tr><td>Write</td><td>创建或覆盖文件</td><td>生成新文件、写入配置</td></tr>
+<tr><td>Edit</td><td>精确替换文件片段</td><td>修改特定代码行，不影响其他部分</td></tr>
+<tr><td>MultiEdit</td><td>一次执行多个 Edit 操作</td><td>批量修改同一文件多处</td></tr>
+<tr><td>Bash</td><td>执行 shell 命令</td><td>运行测试、构建、安装依赖</td></tr>
+<tr><td>Glob</td><td>文件模式匹配</td><td>查找符合条件的文件列表</td></tr>
+<tr><td>Grep</td><td>内容搜索（ripgrep）</td><td>搜索代码中的函数、变量、注释</td></tr>
+<tr><td>Agent</td><td>启动子 Agent</td><td>并行执行独立子任务</td></tr>
+<tr><td>TodoRead</td><td>读取任务列表</td><td>查看当前进行中的任务</td></tr>
+<tr><td>TodoWrite</td><td>管理任务列表</td><td>创建、更新、完成任务</td></tr>
+<tr><td>WebFetch</td><td>获取网页内容</td><td>查阅文档、抓取 API 信息</td></tr>
+<tr><td>WebSearch</td><td>网络搜索</td><td>搜索技术方案、最新信息</td></tr>
+<tr><td>NotebookRead</td><td>读取 Jupyter Notebook</td><td>分析数据科学项目</td></tr>
+<tr><td>NotebookEdit</td><td>编辑 Jupyter Notebook</td><td>修改 notebook 单元格</td></tr>
+</table></div>
+
+<h3>工具使用示例</h3>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">bash (交互式对话)</span></div>
+<pre><code class="language-bash"># 读取并分析文件
+> 读取 src/auth.ts 并解释认证逻辑
+
+# 搜索代码
+> 用 Grep 找出所有调用 fetchUser 的地方
+
+# 批量查找文件
+> 用 Glob 找出所有 *.test.ts 测试文件
+
+# 执行命令
+> 运行 npm test 并告诉我哪些测试失败了
+
+# 精确编辑
+> 在 auth.ts 第 42 行，将 expiresIn 从 "1h" 改为 "24h"</code></pre></div>
+
+<h2>Slash Commands 完整列表（63 条）</h2>
+
+<h3>基础会话命令</h3>
+<div class="tw"><table>
+<tr><th>命令</th><th>功能</th></tr>
+<tr><td>/help</td><td>显示帮助信息和所有可用命令</td></tr>
+<tr><td>/clear, /reset, /new</td><td>清空对话上下文，释放 Token</td></tr>
+<tr><td>/compact [instructions]</td><td>压缩对话历史，保留关键摘要</td></tr>
+<tr><td>/exit, /quit</td><td>退出 Claude Code</td></tr>
+<tr><td>/btw &lt;question&gt;</td><td>快速提问，不添加到对话历史</td></tr>
+</table></div>
+
+<h3>配置与个性化</h3>
+<div class="tw"><table>
+<tr><th>命令</th><th>功能</th></tr>
+<tr><td>/config, /settings</td><td>打开设置界面，调整主题、模型、输出风格</td></tr>
+<tr><td>/status</td><td>显示系统状态（版本、模型、账号、连接）</td></tr>
+<tr><td>/theme</td><td>切换主题（亮色/暗色/色盲友好/Ansi）</td></tr>
+<tr><td>/color [color|default]</td><td>设置提示栏颜色（red/blue/green/yellow/purple/orange/pink/cyan）</td></tr>
+<tr><td>/model [model]</td><td>切换 AI 模型（支持方向键调整 effort 级别）</td></tr>
+<tr><td>/effort [low|medium|high|max|auto]</td><td>设置模型努力程度（low/medium/high 持久化）</td></tr>
+<tr><td>/fast [on|off]</td><td>切换快速模式</td></tr>
+<tr><td>/vim</td><td>切换 Vim/Normal 编辑模式</td></tr>
+<tr><td>/terminal-setup</td><td>配置终端快捷键（VS Code/Alacritty/Warp 等）</td></tr>
+<tr><td>/keybindings</td><td>打开或创建键盘绑定配置文件</td></tr>
+<tr><td>/statusline</td><td>配置状态栏显示</td></tr>
+<tr><td>/permissions, /allowed-tools</td><td>查看或更新权限设置</td></tr>
+<tr><td>/privacy-settings</td><td>查看和更新隐私设置（Pro/Max 计划）</td></tr>
+<tr><td>/sandbox</td><td>切换沙盒模式（部分平台可用）</td></tr>
+</table></div>
+
+<h3>会话管理与导航</h3>
+<div class="tw"><table>
+<tr><th>命令</th><th>功能</th></tr>
+<tr><td>/resume [session], /continue</td><td>恢复之前的会话（支持 ID 或名称）</td></tr>
+<tr><td>/branch [name], /fork</td><td>从当前点创建会话分支</td></tr>
+<tr><td>/rewind, /checkpoint</td><td>回滚对话/代码到之前的检查点</td></tr>
+<tr><td>/rename [name]</td><td>重命名当前会话</td></tr>
+<tr><td>/add-dir &lt;path&gt;</td><td>添加新的工作目录到当前会话</td></tr>
+<tr><td>/export [filename]</td><td>导出对话为文本（可指定文件名）</td></tr>
+<tr><td>/copy [N]</td><td>复制第 N 条助手回复到剪贴板</td></tr>
+<tr><td>/context</td><td>可视化当前上下文使用情况</td></tr>
+</table></div>
+
+<h3>记忆与知识管理</h3>
+<div class="tw"><table>
+<tr><th>命令</th><th>功能</th></tr>
+<tr><td>/memory</td><td>查看/编辑 MEMORY.md，管理自动记忆</td></tr>
+<tr><td>/init</td><td>初始化项目，生成 CLAUDE.md</td></tr>
+<tr><td>/skills</td><td>列出可用技能</td></tr>
+<tr><td>/agents</td><td>管理 Agent 配置</td></tr>
+</table></div>
+
+<h3>Git 与代码审查</h3>
+<div class="tw"><table>
+<tr><th>命令</th><th>功能</th></tr>
+<tr><td>/diff</td><td>打开交互式 diff 查看器</td></tr>
+<tr><td>/pr-comments [PR]</td><td>获取 GitHub PR 评论（需 gh CLI）</td></tr>
+<tr><td>/security-review</td><td>分析当前分支的安全漏洞</td></tr>
+<tr><td>/review</td><td>⚠️ 已弃用，请安装 code-review 插件</td></tr>
+</table></div>
+
+<h3>MCP 与扩展</h3>
+<div class="tw"><table>
+<tr><th>命令</th><th>功能</th></tr>
+<tr><td>/mcp</td><td>管理 MCP 服务器连接和 OAuth</td></tr>
+<tr><td>/hooks</td><td>查看工具事件的 hook 配置</td></tr>
+<tr><td>/plugin, /plugins</td><td>管理 Claude Code 插件</td></tr>
+<tr><td>/reload-plugins</td><td>重载所有插件应用更改</td></tr>
+<tr><td>/chrome</td><td>配置 Claude in Chrome 设置</td></tr>
+<tr><td>/desktop, /app</td><td>在 Claude Code Desktop 应用中继续会话（macOS/Windows）</td></tr>
+<tr><td>/ide</td><td>管理 IDE 集成</td></tr>
+<tr><td>/install-github-app</td><td>为仓库设置 Claude GitHub Actions</td></tr>
+<tr><td>/install-slack-app</td><td>安装 Claude Slack 应用</td></tr>
+</table></div>
+
+<h3>任务与生产力</h3>
+<div class="tw"><table>
+<tr><th>命令</th><th>功能</th></tr>
+<tr><td>/tasks</td><td>列出和管理后台任务</td></tr>
+<tr><td>/plan</td><td>直接进入计划模式</td></tr>
+<tr><td>/remote-control, /rc</td><td>使会话可从 claude.ai 远程控制</td></tr>
+<tr><td>/remote-env</td><td>配置 --remote 网页会话的默认环境</td></tr>
+</table></div>
+
+<h3>统计与洞察</h3>
+<div class="tw"><table>
+<tr><th>命令</th><th>功能</th></tr>
+<tr><td>/cost</td><td>显示 Token 使用统计</td></tr>
+<tr><td>/usage</td><td>显示计划使用限制和速率限制状态</td></tr>
+<tr><td>/stats</td><td>可视化每日使用、会话历史、连续天数</td></tr>
+<tr><td>/insights</td><td>生成会话分析报告（项目领域、交互模式、摩擦点）</td></tr>
+<tr><td>/extra-usage</td><td>配置超出速率限制时的额外使用</td></tr>
+</table></div>
+
+<h3>诊断与反馈</h3>
+<div class="tw"><table>
+<tr><th>命令</th><th>功能</th></tr>
+<tr><td>/doctor</td><td>诊断和验证 Claude Code 安装</td></tr>
+<tr><td>/debug [description]</td><td>排查当前会话问题</td></tr>
+<tr><td>/feedback [report], /bug</td><td>提交反馈或报告问题</td></tr>
+</table></div>
+
+<h3>账号与集成</h3>
+<div class="tw"><table>
+<tr><th>命令</th><th>功能</th></tr>
+<tr><td>/login</td><td>登录 Anthropic 账号</td></tr>
+<tr><td>/logout</td><td>登出账号</td></tr>
+<tr><td>/mobile, /ios, /android</td><td>显示二维码下载 Claude 移动应用</td></tr>
+<tr><td>/passes</td><td>分享免费周给好友（如账户符合条件）</td></tr>
+<tr><td>/upgrade</td><td>打开升级页面（切换计划）</td></tr>
+</table></div>
+
+<h3>其他</h3>
+<div class="tw"><table>
+<tr><th>命令</th><th>功能</th></tr>
+<tr><td>/release-notes</td><td>查看完整更新日志</td></tr>
+<tr><td>/stickers</td><td>订购 Claude Code 贴纸</td></tr>
+<tr><td>/voice</td><td>切换语音输入（需 Claude.ai 账号）</td></tr>
+</table></div>
+
+<h2>键盘快捷键</h2>
+<div class="tw"><table>
+<tr><th>快捷键</th><th>功能</th></tr>
+<tr><td>Ctrl+C</td><td>中断当前操作</td></tr>
+<tr><td>Ctrl+D</td><td>退出（EOF）</td></tr>
+<tr><td>↑ / ↓</td><td>浏览历史命令</td></tr>
+<tr><td>Ctrl+R</td><td>搜索历史命令</td></tr>
+<tr><td>Tab</td><td>自动补全路径和命令</td></tr>
+<tr><td>Ctrl+L</td><td>清屏</td></tr>
+<tr><td>Shift+Enter</td><td>输入多行文本（不提交）</td></tr>
+<tr><td>Esc</td><td>取消当前输入</td></tr>
+</table></div>
+
+<h2>Git 深度集成</h2>
+<p>Claude Code 对 Git 操作有深度理解，可以执行完整的 Git 工作流。</p>
+
+<h3>常见 Git 任务</h3>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">bash (交互对话)</span></div>
+<pre><code class="language-bash"># 查看变更
+> 用 git diff 告诉我改了哪些文件，并解释变更内容
+
+# 智能提交
+> 根据变更内容生成规范的 commit message 并提交
+
+# 创建 PR
+> 将当前分支推送到远程，并创建一个 PR，标题和描述要专业
+
+# 代码审查
+> 审查最近 3 个 commit 的变更，指出潜在问题
+
+# 分支操作
+> 从 main 分支创建一个新的 feature/user-auth 分支
+
+# 冲突解决
+> 帮我解决 src/utils.ts 中的 merge 冲突</code></pre></div>
+
+<h3>Git 配置最佳实践（CLAUDE.md 中）</h3>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">markdown</span></div>
+<pre><code class="language-markdown">## Git 规范
+- Commit message 格式: `type(scope): description`
+- type 可以是: feat, fix, docs, style, refactor, test, chore
+- 提交前必须运行: `npm run lint && npm test`
+- 不允许直接推送到 main 分支，必须通过 PR
+- PR 描述必须包含: 变更原因、测试方案、截图（如有 UI 变更）</code></pre></div>
+
+<h2>多文件编辑最佳实践</h2>
+<p>Claude Code 处理跨文件编辑时的推荐工作流：</p>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">bash</span></div>
+<pre><code class="language-bash"># 步骤 1：让 Claude 先探索项目结构
+> 用 Glob 和 Read 了解项目结构，特别关注用户认证相关的文件
+
+# 步骤 2：制定计划
+> 列出需要修改的文件和修改点，不要直接动手
+
+# 步骤 3：逐文件修改（使用 Edit 而非 Write）
+> 现在开始修改，每个文件改完后告诉我
+
+# 步骤 4：验证
+> 运行测试确认没有破坏现有功能</code></pre></div>
+
+<div class="box tip"><div class="bl">💡 最佳实践</div><p>对于大型修改任务，先让 Claude 制定计划再执行。使用 <code>Edit</code> 工具而非 <code>Write</code> 来修改已有文件——Edit 只替换特定片段，更安全。</p></div>
+
+<div class="chft">
+  <button class="btn" onclick="markDone(2,this)">标记完成 ✓</button>
+  <span class="dm">下一章：记忆与上下文管理</span>
+</div>
+</section>
+<!-- CHAPTER 3: MEMORY & CONTEXT -->
+<section class="ch" id="ch3">
+<div class="chhd">
+  <div class="chlb">第 03 章</div>
+  <h1 class="chtl">记忆与上下文管理</h1>
+  <p class="chds">深入理解 MEMORY.md 机制、多级 CLAUDE.md 配置、上下文压缩策略，让 Claude 跨会话记住重要信息。</p>
+</div>
+
+<h2>上下文管理概览</h2>
+<p>Claude Code 每次对话都有 Token 上限。理解并管理上下文是高效使用的关键。</p>
+<div class="cg">
+  <div class="card"><div class="ct">CLAUDE.md</div><div class="cd">永久加载的项目指令，每次对话自动注入</div></div>
+  <div class="card"><div class="ct">MEMORY.md</div><div class="cd">跨会话记忆文件，通过 /memory 命令管理</div></div>
+  <div class="card"><div class="ct">/compact</div><div class="cd">压缩当前对话历史，保留关键摘要</div></div>
+  <div class="card"><div class="ct">--continue</div><div class="cd">恢复上次会话，保持上下文连续</div></div>
+</div>
+
+<h2>MEMORY.md 机制</h2>
+<p>MEMORY.md 是 Claude Code 的长期记忆系统。存储在 <code>~/.claude/projects/[项目hash]/MEMORY.md</code>。</p>
+
+<h3>如何触发记忆保存</h3>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">bash (交互对话)</span></div>
+<pre><code class="language-bash"># 让 Claude 记住某件事
+> 请记住：这个项目的数据库密码在 .env.local 文件中，不要提交到 git
+
+# 查看当前记忆内容
+/memory
+
+# Claude 也会自动判断需要记录的重要信息
+> 以后所有 Python 代码都用 Black 格式化，用 ruff 检查
+# Claude 会自动将此规则写入 MEMORY.md</code></pre></div>
+
+<h3>MEMORY.md 文件结构示例</h3>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">markdown (MEMORY.md)</span></div>
+<pre><code class="language-markdown"># 项目记忆
+
+## 重要约定
+- 数据库连接字符串在 .env.local（不提交 git）
+- 测试数据库用 TEST_ 前缀的环境变量
+- 所有 API 端点都需要 JWT 认证，除了 /health 和 /auth
+
+## 代码规范（已确认）
+- Python: Black 格式化 + ruff 检查
+- TypeScript: Prettier + ESLint strict 模式
+- 提交前运行: make check
+
+## 已完成的重构
+- 2024-01-15: 用户模块重构完成，旧的 user_service.py 已删除
+- 2024-01-20: 认证改为 JWT，移除了 session 相关代码
+
+## 待办事项
+- [ ] 迁移到 PostgreSQL 16
+- [ ] 添加 Redis 缓存层</code></pre></div>
+
+<div class="box note"><div class="bl">📌 提示</div><p>MEMORY.md 的前 200 行会自动加载到每次对话。超过 200 行的内容会被截断，请保持精简。</p></div>
+
+<h2>多级 CLAUDE.md 配置</h2>
+<p>Claude Code 会合并加载多个层级的 CLAUDE.md：</p>
+<div class="tw"><table>
+<tr><th>层级</th><th>文件位置</th><th>适用范围</th><th>优先级</th></tr>
+<tr><td>用户全局</td><td>~/.claude/CLAUDE.md</td><td>所有项目</td><td>最低</td></tr>
+<tr><td>项目根目录</td><td>./CLAUDE.md</td><td>当前项目</td><td>中等</td></tr>
+<tr><td>子目录</td><td>./src/CLAUDE.md</td><td>当前目录及子目录</td><td>最高</td></tr>
+</table></div>
+
+<h3>用户全局 CLAUDE.md 示例</h3>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">markdown (~/.claude/CLAUDE.md)</span></div>
+<pre><code class="language-markdown"># 全局偏好
+
+## 通用编码规范
+- 所有代码注释用中文
+- 函数必须有 docstring/JSDoc
+- 变量名用 camelCase，常量用 UPPER_SNAKE
+
+## 工具偏好
+- 优先使用 pnpm 而非 npm
+- Python 包管理用 uv
+- 代码格式化：prettier (JS/TS), black (Python)
+
+## 回复风格
+- 简洁直接，不废话
+- 代码示例要完整可运行
+- 遇到不确定的情况主动询问</code></pre></div>
+
+<h2>/compact 压缩上下文</h2>
+<p>当对话变长（Token 使用率超过 80%）时，使用 /compact 压缩历史：</p>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">bash</span></div>
+<pre><code class="language-bash"># 手动压缩
+/compact
+
+# Claude 会自动：
+# 1. 总结已完成的工作
+# 2. 提取关键信息和决策
+# 3. 保留未完成的任务
+# 4. 压缩后继续对话</code></pre></div>
+
+<div class="box tip"><div class="bl">💡 最佳实践</div><p>不要等到 Token 快满了才压缩。在完成一个功能模块后主动使用 /compact，可以保持上下文清晰，避免 Claude 因上下文过长而混淆。</p></div>
+
+<h2>会话持久化技巧</h2>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">bash</span></div>
+<pre><code class="language-bash"># 继续上次会话（最近一次）
+claude --continue
+
+# 列出所有会话
+claude --list-sessions
+
+# 恢复特定会话
+claude --resume SESSION_ID
+
+# 在新终端恢复会话
+cd my-project && claude --continue</code></pre></div>
+
+<h3>任务列表系统（TodoWrite/TodoRead）</h3>
+<p>对于复杂任务，Claude 会使用内置的 Todo 系统追踪进度：</p>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">bash</span></div>
+<pre><code class="language-bash"># 让 Claude 使用 Todo 系统规划任务
+> 帮我重构用户认证模块。请先创建任务列表，然后逐步执行，每完成一项就标记。
+
+# Claude 会：
+# 1. 用 TodoWrite 创建任务列表
+# 2. 逐项标记为 in_progress
+# 3. 完成后标记为 completed
+# 4. 可随时用 TodoRead 查看进度</code></pre></div>
+
+<div class="chft">
+  <button class="btn" onclick="markDone(3,this)">标记完成 ✓</button>
+  <span class="dm">下一章：Hooks 系统</span>
+</div>
+</section>
+<!-- CHAPTER 4: HOOKS -->
+<section class="ch" id="ch4">
+<div class="chhd">
+  <div class="chlb">第 04 章</div>
+  <h1 class="chtl">Hooks 系统</h1>
+  <p class="chds">Hooks 是 Claude Code 的事件驱动自动化系统，让你在特定操作发生时自动执行自定义脚本。</p>
+</div>
+
+<h2>Hooks 原理</h2>
+<p>Hooks 在特定事件（如工具调用前后、对话开始等）触发，执行用户定义的 shell 脚本。脚本可以：修改行为、记录日志、阻止危险操作、触发通知。</p>
+
+<div class="cg">
+  <div class="card"><div class="ct">PreToolUse</div><div class="cd">工具调用前触发。可以阻止操作，修改参数</div></div>
+  <div class="card"><div class="ct">PostToolUse</div><div class="cd">工具调用后触发。可以记录结果，触发后续操作</div></div>
+  <div class="card"><div class="ct">Notification</div><div class="cd">Claude 发送通知时触发。用于系统通知、消息推送</div></div>
+  <div class="card"><div class="ct">Stop</div><div class="cd">Claude 完成响应时触发。用于总结、日志、清理</div></div>
+</div>
+
+<h2>配置 Hooks（settings.json）</h2>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">json (.claude/settings.json)</span></div>
+<pre><code class="language-json">{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '执行 Bash 命令前检查...' && bash ~/scripts/pre-bash-check.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/scripts/auto-format.sh"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "notify-send 'Claude Code' '$CLAUDE_NOTIFICATION_TITLE'"
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre></div>
+
+<h2>Hook 环境变量</h2>
+<div class="tw"><table>
+<tr><th>变量名</th><th>说明</th><th>可用 Hook</th></tr>
+<tr><td>CLAUDE_TOOL_NAME</td><td>当前工具名称（如 Bash, Write）</td><td>PreToolUse, PostToolUse</td></tr>
+<tr><td>CLAUDE_TOOL_INPUT</td><td>工具输入参数（JSON）</td><td>PreToolUse</td></tr>
+<tr><td>CLAUDE_TOOL_OUTPUT</td><td>工具执行结果</td><td>PostToolUse</td></tr>
+<tr><td>CLAUDE_NOTIFICATION_TITLE</td><td>通知标题</td><td>Notification</td></tr>
+<tr><td>CLAUDE_NOTIFICATION_BODY</td><td>通知内容</td><td>Notification</td></tr>
+<tr><td>CLAUDE_SESSION_ID</td><td>当前会话 ID</td><td>所有</td></tr>
+</table></div>
+
+<h2>实战示例一：自动格式化</h2>
+<p>每次写入 Python 文件后自动运行 Black 格式化：</p>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">bash (~/scripts/auto-format.sh)</span></div>
+<pre><code class="language-bash">#!/bin/bash
+# 从环境变量获取工具输入
+TOOL_INPUT="$CLAUDE_TOOL_INPUT"
+
+# 提取文件路径（jq 解析 JSON）
+FILE_PATH=$(echo "$TOOL_INPUT" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('file_path',''))")
+
+# 如果是 Python 文件，自动格式化
+if [[ "$FILE_PATH" == *.py ]]; then
+  echo "格式化 Python 文件: $FILE_PATH"
+  black "$FILE_PATH" 2>/dev/null
+  ruff check --fix "$FILE_PATH" 2>/dev/null
+fi
+
+# 如果是 JS/TS 文件，运行 prettier
+if [[ "$FILE_PATH" =~ \.(js|ts|jsx|tsx)$ ]]; then
+  echo "格式化 JS/TS 文件: $FILE_PATH"
+  prettier --write "$FILE_PATH" 2>/dev/null
+fi</code></pre></div>
+
+<h3>对应的 settings.json 配置</h3>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">json</span></div>
+<pre><code class="language-json">{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [{"type": "command", "command": "bash ~/scripts/auto-format.sh"}]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [{"type": "command", "command": "bash ~/scripts/auto-format.sh"}]
+      }
+    ]
+  }
+}</code></pre></div>
+
+<h2>实战示例二：安全拦截危险命令</h2>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">bash (~/scripts/security-check.sh)</span></div>
+<pre><code class="language-bash">#!/bin/bash
+TOOL_INPUT="$CLAUDE_TOOL_INPUT"
+CMD=$(echo "$TOOL_INPUT" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('command',''))")
+
+# 危险命令黑名单
+DANGEROUS_PATTERNS=("rm -rf /" "DROP TABLE" "DELETE FROM" "> /dev/sda" "mkfs")
+
+for pattern in "${DANGEROUS_PATTERNS[@]}"; do
+  if echo "$CMD" | grep -qi "$pattern"; then
+    echo "BLOCKED: 检测到危险命令: $pattern"
+    exit 2  # 返回非零值阻止执行
+  fi
+done
+
+# 记录所有 Bash 命令到日志
+echo "$(date '+%Y-%m-%d %H:%M:%S') | $CMD" >> ~/.claude/bash-history.log
+exit 0  # 允许执行</code></pre></div>
+
+<h2>实战示例三：系统通知</h2>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">bash</span></div>
+<pre><code class="language-bash">#!/bin/bash
+# macOS 通知
+osascript -e "display notification "$CLAUDE_NOTIFICATION_BODY" with title "Claude Code""
+
+# Linux 通知（需要 libnotify）
+# notify-send "Claude Code" "$CLAUDE_NOTIFICATION_BODY"
+
+# Windows（PowerShell）
+# powershell -Command "Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show('$CLAUDE_NOTIFICATION_BODY','Claude Code')"</code></pre></div>
+
+<div class="box tip"><div class="bl">💡 Hook 退出码</div><p>Hook 脚本的退出码控制是否继续执行：<code>exit 0</code> = 允许，<code>exit 2</code> = 阻止（用于 PreToolUse），其他非零值 = 错误但继续。</p></div>
+
+<div class="chft">
+  <button class="btn" onclick="markDone(4,this)">标记完成 ✓</button>
+  <span class="dm">下一章：MCP 协议</span>
+</div>
+</section>
+<!-- CHAPTER 5: MCP -->
+<section class="ch" id="ch5">
+<div class="chhd">
+  <div class="chlb">第 05 章</div>
+  <h1 class="chtl">MCP 协议</h1>
+  <p class="chds">Model Context Protocol (MCP) 是 Anthropic 定义的开放标准，让 Claude 连接外部工具和数据源。</p>
+</div>
+
+<h2>MCP 是什么</h2>
+<p>MCP（Model Context Protocol）是一个开放协议，定义了 AI 模型与外部工具之间的通信方式。通过 MCP，Claude 可以：</p>
+<ul>
+  <li>连接数据库（Postgres、Supabase、SQLite）</li>
+  <li>控制浏览器（Playwright）</li>
+  <li>调用外部 API（GitHub、Slack、Jira）</li>
+  <li>访问文件系统（跨机器、远程）</li>
+  <li>执行自定义工具逻辑</li>
+</ul>
+
+<h2>MCP 架构</h2>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">text</span></div>
+<pre><code class="language-bash">┌─────────────────┐    MCP Protocol    ┌──────────────────┐
+│   Claude Code   │◄──────────────────►│   MCP Server     │
+│   (MCP Client)  │                    │  (你的工具/数据)  │
+└─────────────────┘                    └──────────────────┘
+                                              │
+                                    ┌─────────┴────────┐
+                                    │   工具/资源/提示  │
+                                    │  - 数据库查询     │
+                                    │  - 文件操作       │
+                                    │  - API 调用       │
+                                    └──────────────────┘</code></pre></div>
+
+<h2>配置已有 MCP 服务器</h2>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">json (.claude/settings.json)</span></div>
+<pre><code class="language-json">{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/Users/me/Documents"]
+    },
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "ghp_xxxx"
+      }
+    },
+    "postgres": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres", "postgresql://localhost/mydb"]
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"]
+    },
+    "supabase": {
+      "command": "npx",
+      "args": ["-y", "@supabase/mcp-server-supabase@latest"],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "your-token"
+      }
+    }
+  }
+}</code></pre></div>
+
+<h2>常用 MCP 服务器列表</h2>
+<div class="tw"><table>
+<tr><th>服务器</th><th>包名</th><th>功能</th></tr>
+<tr><td>Filesystem</td><td>@modelcontextprotocol/server-filesystem</td><td>本地文件系统访问</td></tr>
+<tr><td>GitHub</td><td>@modelcontextprotocol/server-github</td><td>仓库、PR、Issue 管理</td></tr>
+<tr><td>PostgreSQL</td><td>@modelcontextprotocol/server-postgres</td><td>数据库查询</td></tr>
+<tr><td>Playwright</td><td>@playwright/mcp</td><td>浏览器自动化</td></tr>
+<tr><td>Supabase</td><td>@supabase/mcp-server-supabase</td><td>Supabase 完整访问</td></tr>
+<tr><td>Slack</td><td>@modelcontextprotocol/server-slack</td><td>Slack 消息和频道</td></tr>
+<tr><td>Memory</td><td>@modelcontextprotocol/server-memory</td><td>知识图谱存储</td></tr>
+<tr><td>Fetch</td><td>@modelcontextprotocol/server-fetch</td><td>网页抓取</td></tr>
+</table></div>
+
+<h2>构建自定义 MCP 服务器（Python）</h2>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">python (my_mcp_server.py)</span></div>
+<pre><code class="language-python">from mcp.server import Server
+from mcp.server.stdio import stdio_server
+from mcp import types
+import httpx
+
+app = Server("my-api-server")
+
+@app.list_tools()
+async def list_tools() -> list[types.Tool]:
+    return [
+        types.Tool(
+            name="get_weather",
+            description="获取指定城市的天气信息",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "city": {"type": "string", "description": "城市名称"}
+                },
+                "required": ["city"]
+            }
+        ),
+        types.Tool(
+            name="search_database",
+            description="搜索产品数据库",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "query": {"type": "string"},
+                    "limit": {"type": "integer", "default": 10}
+                },
+                "required": ["query"]
+            }
+        )
+    ]
+
+@app.call_tool()
+async def call_tool(name: str, arguments: dict) -> list[types.TextContent]:
+    if name == "get_weather":
+        city = arguments["city"]
+        async with httpx.AsyncClient() as client:
+            resp = await client.get(f"https://api.weather.com/v1/{city}")
+            data = resp.json()
+        return [types.TextContent(type="text", text=str(data))]
+
+    elif name == "search_database":
+        query = arguments["query"]
+        # 实际数据库查询逻辑
+        results = [{"id": 1, "name": "示例产品", "query": query}]
+        return [types.TextContent(type="text", text=str(results))]
+
+    raise ValueError(f"Unknown tool: {name}")
+
+async def main():
+    async with stdio_server() as (read_stream, write_stream):
+        await app.run(read_stream, write_stream, app.create_initialization_options())
+
+if __name__ == "__main__":
+    import asyncio
+    asyncio.run(main())</code></pre></div>
+
+<h3>安装依赖并注册</h3>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">bash</span></div>
+<pre><code class="language-bash">pip install mcp httpx
+
+# 在 settings.json 中注册
+# "my-api": {
+#   "command": "python",
+#   "args": ["/path/to/my_mcp_server.py"]
+# }</code></pre></div>
+
+<h2>构建自定义 MCP 服务器（Node.js）</h2>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">javascript (server.js)</span></div>
+<pre><code class="language-javascript">import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
+
+const server = new Server(
+  { name: "my-node-server", version: "1.0.0" },
+  { capabilities: { tools: {} } }
+);
+
+server.setRequestHandler(ListToolsRequestSchema, async () => ({
+  tools: [{
+    name: "calculate",
+    description: "执行数学计算",
+    inputSchema: {
+      type: "object",
+      properties: {
+        expression: { type: "string", description: "数学表达式" }
+      },
+      required: ["expression"]
+    }
+  }]
+}));
+
+server.setRequestHandler(CallToolRequestSchema, async (request) => {
+  if (request.params.name === "calculate") {
+    const { expression } = request.params.arguments;
+    const result = eval(expression); // 实际使用时用安全的数学库
+    return { content: [{ type: "text", text: `结果: ${result}` }] };
+  }
+  throw new Error(`Unknown tool: ${request.params.name}`);
+});
+
+const transport = new StdioServerTransport();
+await server.connect(transport);</code></pre></div>
+
+<div class="box tip"><div class="bl">💡 MCP 设计原则</div><p>工具名称要动词化（get_xxx, create_xxx, search_xxx）。描述要清晰，让 Claude 能准确判断何时使用。参数 schema 要严格定义，减少 AI 猜测。</p></div>
+
+<div class="chft">
+  <button class="btn" onclick="markDone(5,this)">标记完成 ✓</button>
+  <span class="dm">下一章：Claude API &amp; SDK</span>
+</div>
+</section>
+<!-- CHAPTER 6: API & SDK -->
+<section class="ch" id="ch6">
+<div class="chhd">
+  <div class="chlb">第 06 章</div>
+  <h1 class="chtl">Claude API &amp; SDK</h1>
+  <p class="chds">掌握 Anthropic API 的核心能力：Messages API、流式输出、Vision、Tool Use，以及 Python/Node.js SDK 完整用法。</p>
+</div>
+
+<h2>API 认证与基础</h2>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">bash</span></div>
+<pre><code class="language-bash"># 设置 API Key
+export ANTHROPIC_API_KEY="sk-ant-xxxx"
+
+# pip 安装 Python SDK
+pip install anthropic
+
+# npm 安装 Node.js SDK
+npm install @anthropic-ai/sdk</code></pre></div>
+
+<h2>Python SDK 完整示例</h2>
+<h3>基础对话</h3>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">python</span></div>
+<pre><code class="language-python">import anthropic
+
+client = anthropic.Anthropic()  # 自动读取 ANTHROPIC_API_KEY
+
+# 基础文本请求
+message = client.messages.create(
+    model="claude-opus-4-6",
+    max_tokens=1024,
+    messages=[
+        {"role": "user", "content": "用 Python 写一个二分查找算法"}
+    ]
+)
+print(message.content[0].text)
+
+# 多轮对话
+conversation = [
+    {"role": "user", "content": "你好，我想学习机器学习"}
+]
+
+response = client.messages.create(
+    model="claude-opus-4-6",
+    max_tokens=1024,
+    system="你是一位专业的机器学习导师，用简洁易懂的语言教学。",
+    messages=conversation
+)
+
+# 添加 AI 回复到对话历史
+conversation.append({
+    "role": "assistant",
+    "content": response.content[0].text
+})
+
+# 继续对话
+conversation.append({
+    "role": "user",
+    "content": "从哪里开始比较好？"
+})
+
+response2 = client.messages.create(
+    model="claude-opus-4-6",
+    max_tokens=1024,
+    system="你是一位专业的机器学习导师。",
+    messages=conversation
+)</code></pre></div>
+
+<h3>流式输出（Streaming）</h3>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">python</span></div>
+<pre><code class="language-python">import anthropic
+
+client = anthropic.Anthropic()
+
+# 流式输出 - 实时打印
+with client.messages.stream(
+    model="claude-opus-4-6",
+    max_tokens=2048,
+    messages=[{"role": "user", "content": "写一篇关于 AI 的文章"}]
+) as stream:
+    for text in stream.text_stream:
+        print(text, end="", flush=True)
+    
+    # 获取最终完整消息
+    final_message = stream.get_final_message()
+    print(f"
+
+总 Token 数: {final_message.usage.output_tokens}")</code></pre></div>
+
+<h3>Vision（图片理解）</h3>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">python</span></div>
+<pre><code class="language-python">import anthropic, base64
+
+client = anthropic.Anthropic()
+
+# 方式一：URL 图片
+message = client.messages.create(
+    model="claude-opus-4-6",
+    max_tokens=1024,
+    messages=[{
+        "role": "user",
+        "content": [
+            {
+                "type": "image",
+                "source": {
+                    "type": "url",
+                    "url": "https://example.com/chart.png"
+                }
+            },
+            {"type": "text", "text": "分析这张图表中的数据趋势"}
+        ]
+    }]
+)
+
+# 方式二：本地文件（base64）
+with open("screenshot.png", "rb") as f:
+    image_data = base64.standard_b64encode(f.read()).decode("utf-8")
+
+message = client.messages.create(
+    model="claude-opus-4-6",
+    max_tokens=1024,
+    messages=[{
+        "role": "user",
+        "content": [
+            {
+                "type": "image",
+                "source": {"type": "base64", "media_type": "image/png", "data": image_data}
+            },
+            {"type": "text", "text": "这个 UI 有什么问题？"}
+        ]
+    }]
+)</code></pre></div>
+
+<h3>Tool Use（函数调用）</h3>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">python</span></div>
+<pre><code class="language-python">import anthropic, json
+
+client = anthropic.Anthropic()
+
+# 定义工具
+tools = [
+    {
+        "name": "get_stock_price",
+        "description": "获取指定股票的实时价格",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "symbol": {"type": "string", "description": "股票代码，如 AAPL"},
+                "currency": {"type": "string", "enum": ["USD", "CNY"], "default": "USD"}
+            },
+            "required": ["symbol"]
+        }
+    }
+]
+
+# 模拟工具执行函数
+def get_stock_price(symbol, currency="USD"):
+    prices = {"AAPL": 189.5, "GOOGL": 175.2, "MSFT": 420.1}
+    price = prices.get(symbol, 0)
+    if currency == "CNY":
+        price *= 7.2
+    return {"symbol": symbol, "price": price, "currency": currency}
+
+# 发送请求
+messages = [{"role": "user", "content": "苹果公司股价是多少？换算成人民币"}]
+
+response = client.messages.create(
+    model="claude-opus-4-6",
+    max_tokens=1024,
+    tools=tools,
+    messages=messages
+)
+
+# 处理工具调用
+while response.stop_reason == "tool_use":
+    # 找到工具调用
+    tool_use = next(b for b in response.content if b.type == "tool_use")
+    tool_name = tool_use.name
+    tool_input = tool_use.input
+    
+    # 执行工具
+    if tool_name == "get_stock_price":
+        result = get_stock_price(**tool_input)
+    
+    # 将结果返回给 Claude
+    messages.append({"role": "assistant", "content": response.content})
+    messages.append({
+        "role": "user",
+        "content": [{
+            "type": "tool_result",
+            "tool_use_id": tool_use.id,
+            "content": json.dumps(result)
+        }]
+    })
+    
+    response = client.messages.create(
+        model="claude-opus-4-6",
+        max_tokens=1024,
+        tools=tools,
+        messages=messages
+    )
+
+print(response.content[0].text)</code></pre></div>
+
+<h2>Node.js SDK 示例</h2>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">javascript</span></div>
+<pre><code class="language-javascript">import Anthropic from "@anthropic-ai/sdk";
+
+const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+
+// 基础请求
+const message = await client.messages.create({
+  model: "claude-opus-4-6",
+  max_tokens: 1024,
+  messages: [{ role: "user", content: "解释一下 async/await" }]
+});
+console.log(message.content[0].text);
+
+// 流式输出
+const stream = await client.messages.stream({
+  model: "claude-opus-4-6",
+  max_tokens: 2048,
+  messages: [{ role: "user", content: "写一个 Express.js 中间件" }]
+});
+
+for await (const event of stream) {
+  if (event.type === "content_block_delta" && event.delta.type === "text_delta") {
+    process.stdout.write(event.delta.text);
+  }
+}
+
+// Tool Use
+const tools = [{
+  name: "fetch_data",
+  description: "从 API 获取数据",
+  input_schema: {
+    type: "object",
+    properties: {
+      url: { type: "string" },
+      method: { type: "string", enum: ["GET", "POST"] }
+    },
+    required: ["url"]
+  }
+}];</code></pre></div>
+
+<h2>错误处理与重试</h2>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">python</span></div>
+<pre><code class="language-python">import anthropic
+from anthropic import APIConnectionError, RateLimitError, APIStatusError
+
+client = anthropic.Anthropic(
+    max_retries=3,      # 自动重试次数
+    timeout=60.0,       # 超时秒数
+)
+
+try:
+    message = client.messages.create(
+        model="claude-opus-4-6",
+        max_tokens=1024,
+        messages=[{"role": "user", "content": "Hello"}]
+    )
+except RateLimitError as e:
+    print(f"速率限制，稍后重试: {e}")
+except APIConnectionError as e:
+    print(f"连接错误: {e}")
+except APIStatusError as e:
+    print(f"API 错误 {e.status_code}: {e.message}")</code></pre></div>
+
+<div class="chft">
+  <button class="btn" onclick="markDone(6,this)">标记完成 ✓</button>
+  <span class="dm">下一章：Agent SDK &amp; 多 Agent</span>
+</div>
+</section>
+<!-- CHAPTER 7: AGENT SDK -->
+<section class="ch" id="ch7">
+<div class="chhd">
+  <div class="chlb">第 07 章</div>
+  <h1 class="chtl">Agent SDK &amp; 多 Agent 系统</h1>
+  <p class="chds">使用 Anthropic SDK 构建自主 Agent，实现多 Agent 协作模式，打造复杂的 AI 自动化工作流。</p>
+</div>
+
+<h2>Agent 基本概念</h2>
+<p>Agent 是能够自主完成复杂任务的 AI 系统，它不只是回答问题，而是<strong>规划 → 工具调用 → 自我修正 → 完成任务</strong>的完整循环。</p>
+<div class="cg">
+  <div class="card"><div class="ct">规划能力</div><div class="cd">分析任务，制定执行步骤，处理复杂依赖关系</div></div>
+  <div class="card"><div class="ct">工具调用</div><div class="cd">主动使用 read/write/bash 等工具操作真实环境</div></div>
+  <div class="card"><div class="ct">自我修正</div><div class="cd">根据执行结果调整策略，处理错误和异常</div></div>
+  <div class="card"><div class="ct">任务完成</div><div class="cd">达到目标后自动停止，不会无限循环</div></div>
+</div>
+
+<h2>Claude Code 内置 Agent 工具</h2>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">bash (交互对话)</span></div>
+<pre><code class="language-bash"># 在 Claude Code 中派发并行子 Agent
+> 同时执行以下 3 个独立任务，使用 Agent 工具并行处理：
+> 1. 分析 frontend/ 目录的代码质量，输出报告
+> 2. 扫描 backend/ 的潜在安全漏洞
+> 3. 统计所有测试文件的覆盖率情况
+
+# Claude 会自动：
+# - 用 Agent 工具启动 3 个独立子 Agent
+# - 每个子 Agent 有独立上下文
+# - 并行执行，汇总结果</code></pre></div>
+
+<h2>基础 Agent 循环（Python 实现）</h2>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">python</span></div>
+<pre><code class="language-python">import anthropic, subprocess, json
+from pathlib import Path
+
+client = anthropic.Anthropic()
+
+TOOLS = [
+    {"name": "read_file", "description": "读取文件",
+     "input_schema": {"type":"object","properties":{"path":{"type":"string"}},"required":["path"]}},
+    {"name": "write_file", "description": "写入文件",
+     "input_schema": {"type":"object","properties":{"path":{"type":"string"},"content":{"type":"string"}},"required":["path","content"]}},
+    {"name": "run_cmd", "description": "执行命令",
+     "input_schema": {"type":"object","properties":{"cmd":{"type":"string"}},"required":["cmd"]}},
+    {"name": "done", "description": "任务完成",
+     "input_schema": {"type":"object","properties":{"result":{"type":"string"}},"required":["result"]}}
+]
+
+def run_tool(name, args):
+    if name == "read_file":
+        return Path(args["path"]).read_text(encoding="utf-8")
+    elif name == "write_file":
+        Path(args["path"]).write_text(args["content"], encoding="utf-8")
+        return "写入成功"
+    elif name == "run_cmd":
+        r = subprocess.run(args["cmd"], shell=True, capture_output=True, text=True)
+        return r.stdout + r.stderr
+
+def agent(task, max_iters=20):
+    msgs = [{"role":"user","content":task}]
+    for i in range(max_iters):
+        resp = client.messages.create(
+            model="claude-opus-4-6", max_tokens=4096,
+            system="自主完成任务。用工具操作。完成时调用 done。",
+            tools=TOOLS, messages=msgs
+        )
+        msgs.append({"role":"assistant","content":resp.content})
+        if resp.stop_reason == "end_turn":
+            return next((b.text for b in resp.content if hasattr(b,"text")), "完成")
+        if resp.stop_reason == "tool_use":
+            results = []
+            for b in resp.content:
+                if b.type == "tool_use":
+                    if b.name == "done": return b.input["result"]
+                    result = run_tool(b.name, b.input)
+                    results.append({"type":"tool_result","tool_use_id":b.id,"content":result})
+            msgs.append({"role":"user","content":results})
+    return "超过最大迭代次数"
+
+# 使用示例
+result = agent("分析当前目录 Python 文件，找出所有函数，生成 functions.md")
+print(result)</code></pre></div>
+<h2>多 Agent 协作模式</h2>
+<h3>主从模式（Orchestrator + Workers）</h3>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">python</span></div>
+<pre><code class="language-python">import asyncio
+import anthropic
+
+client = anthropic.Anthropic()
+
+async def worker(task, wid):
+    """工作 Agent：用轻量模型处理子任务"""
+    resp = client.messages.create(
+        model="claude-haiku-4-5-20251001",
+        max_tokens=1024,
+        messages=[{"role":"user","content":task}]
+    )
+    return resp.content[0].text
+
+async def orchestrator(main_task):
+    """主控 Agent：分解任务，并行派发，汇总结果"""
+    # 定义子任务（实际中由 Claude 动态生成）
+    subtasks = [
+        "研究市场需求，输出需求分析",
+        "分析主要竞争对手，列出优劣势",
+        "制定技术实现方案"
+    ]
+    # 并行执行所有子任务
+    results = await asyncio.gather(*[worker(t, i) for i, t in enumerate(subtasks)])
+    # 主控汇总
+    summary = client.messages.create(
+        model="claude-opus-4-6",
+        max_tokens=2048,
+        messages=[{"role":"user","content":"汇总结果：
+"+"
+
+".join(results)}]
+    )
+    return summary.content[0].text
+
+asyncio.run(orchestrator("为新 SaaS 产品制定上市策略"))</code></pre></div>
+
+<h3>流水线模式（Pipeline）</h3>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">python</span></div>
+<pre><code class="language-python">def pipeline(stages, data):
+    """每个阶段的输出是下一阶段的输入"""
+    for stage in stages:
+        resp = client.messages.create(
+            model="claude-opus-4-6", max_tokens=2048,
+            system=stage["prompt"],
+            messages=[{"role":"user","content":data}]
+        )
+        data = resp.content[0].text
+        print(f"✓ {stage['name']} 完成")
+    return data
+
+# 代码审查流水线
+stages = [
+    {"name":"语法检查", "prompt":"检查代码语法错误，输出错误列表"},
+    {"name":"安全扫描", "prompt":"基于前述结果，进行 OWASP Top10 安全扫描"},
+    {"name":"性能分析", "prompt":"基于安全扫描，提出性能优化建议"},
+    {"name":"报告生成", "prompt":"汇总所有发现，生成专业代码审查报告"},
+]
+
+code = open("my_code.py").read()
+report = pipeline(stages, code)</code></pre></div>
+
+<h2>实战：构建代码审查 Agent</h2>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">python</span></div>
+<pre><code class="language-python">import anthropic, subprocess
+from pathlib import Path
+
+client = anthropic.Anthropic()
+
+def code_review_agent(repo_path: str) -> str:
+    """完整代码审查 Agent"""
+    tools = [
+        {"name":"list_files","description":"列出目录文件",
+         "input_schema":{"type":"object","properties":{"dir":{"type":"string"}},"required":["dir"]}},
+        {"name":"read_file","description":"读取文件",
+         "input_schema":{"type":"object","properties":{"path":{"type":"string"}},"required":["path"]}},
+        {"name":"run_tests","description":"运行测试",
+         "input_schema":{"type":"object","properties":{}}}
+    ]
+    
+    messages = [{"role":"user","content":f"审查 {repo_path} 的代码质量，检查：1)代码风格 2)潜在 bug 3)安全问题 4)测试覆盖率，生成详细报告"}]
+    
+    # Agent 循环
+    while True:
+        resp = client.messages.create(
+            model="claude-opus-4-6", max_tokens=4096,
+            system="你是专业代码审查工程师，系统性审查代码库，提供具体可行的改进建议。",
+            tools=tools, messages=messages
+        )
+        messages.append({"role":"assistant","content":resp.content})
+        
+        if resp.stop_reason == "end_turn":
+            return next((b.text for b in resp.content if hasattr(b,"text")), "审查完成")
+        
+        results = []
+        for b in resp.content:
+            if b.type != "tool_use": continue
+            if b.name == "list_files":
+                out = subprocess.run(f"ls {b.input['dir']}", shell=True, capture_output=True, text=True).stdout
+            elif b.name == "read_file":
+                out = Path(b.input["path"]).read_text(encoding="utf-8", errors="ignore")[:3000]
+            elif b.name == "run_tests":
+                out = subprocess.run("npm test 2>&1 | head -50", shell=True, capture_output=True, text=True).stdout
+            else:
+                out = "Unknown tool"
+            results.append({"type":"tool_result","tool_use_id":b.id,"content":out})
+        messages.append({"role":"user","content":results})
+
+# 使用
+report = code_review_agent("./my-project")
+print(report)</code></pre></div>
+
+<div class="box tip"><div class="bl">💡 模型选择策略</div><p>主控 Agent 用 <code>claude-opus-4-6</code>（复杂推理），工作 Agent 用 <code>claude-haiku-4-5-20251001</code>（简单快速），中等任务用 <code>claude-sonnet-4-6</code>。合理选型可降低 5-10x 成本。</p></div>
+
+<div class="chft">
+  <button class="btn" onclick="markDone(7,this)">标记完成 ✓</button>
+  <span class="dm">查看附录速查表</span>
+</div>
+</section>
+<!-- APPENDIX -->
+<section class="ch" id="ch8">
+<div class="chhd">
+  <div class="chlb">附录</div>
+  <h1 class="chtl">速查表 &amp; 参考资料</h1>
+  <p class="chds">所有命令、配置、快捷键和官方资源的完整参考。</p>
+</div>
+
+<h2>Claude Code 命令速查</h2>
+<div class="tw"><table>
+<tr><th>命令</th><th>说明</th></tr>
+<tr><td>claude</td><td>启动交互模式</td></tr>
+<tr><td>claude --print "task"</td><td>非交互式执行，输出到 stdout</td></tr>
+<tr><td>claude --model MODEL</td><td>指定模型（claude-opus-4-6 等）</td></tr>
+<tr><td>claude --continue</td><td>继续上次会话</td></tr>
+<tr><td>claude --resume ID</td><td>恢复指定会话</td></tr>
+<tr><td>claude --no-color</td><td>禁用颜色（管道用）</td></tr>
+<tr><td>claude --cwd PATH</td><td>指定工作目录</td></tr>
+<tr><td>claude --output-format json</td><td>JSON 格式输出</td></tr>
+<tr><td>claude --dangerously-skip-permissions</td><td>跳过所有权限确认</td></tr>
+<tr><td>claude --verbose</td><td>详细输出模式</td></tr>
+<tr><td>claude --version</td><td>查看版本</td></tr>
+</table></div>
+
+<h2>Slash Commands 速查（63 条）</h2>
+
+<h3>基础与会话</h3>
+<div class="tw"><table>
+<tr><th>命令</th><th>说明</th></tr>
+<tr><td>/help</td><td>显示帮助</td></tr>
+<tr><td>/clear, /reset, /new</td><td>清空对话上下文</td></tr>
+<tr><td>/compact [instructions]</td><td>压缩历史保留摘要</td></tr>
+<tr><td>/exit, /quit</td><td>退出</td></tr>
+<tr><td>/btw &lt;question&gt;</td><td>快速提问不记录</td></tr>
+</table></div>
+
+<h3>配置与个性化</h3>
+<div class="tw"><table>
+<tr><th>命令</th><th>说明</th></tr>
+<tr><td>/config, /settings</td><td>打开设置界面</td></tr>
+<tr><td>/status</td><td>查看系统状态</td></tr>
+<tr><td>/theme</td><td>切换主题</td></tr>
+<tr><td>/color [color]</td><td>设置提示栏颜色</td></tr>
+<tr><td>/model [model]</td><td>切换模型</td></tr>
+<tr><td>/effort [level]</td><td>设置努力程度</td></tr>
+<tr><td>/fast [on|off]</td><td>快速模式</td></tr>
+<tr><td>/vim</td><td>切换 Vim 模式</td></tr>
+<tr><td>/terminal-setup</td><td>配置终端快捷键</td></tr>
+<tr><td>/keybindings</td><td>键盘绑定配置</td></tr>
+<tr><td>/statusline</td><td>配置状态栏</td></tr>
+<tr><td>/permissions</td><td>权限设置</td></tr>
+<tr><td>/privacy-settings</td><td>隐私设置</td></tr>
+<tr><td>/sandbox</td><td>沙盒模式</td></tr>
+</table></div>
+
+<h3>会话管理</h3>
+<div class="tw"><table>
+<tr><th>命令</th><th>说明</th></tr>
+<tr><td>/resume, /continue</td><td>恢复会话</td></tr>
+<tr><td>/branch, /fork</td><td>创建会话分支</td></tr>
+<tr><td>/rewind, /checkpoint</td><td>回滚到检查点</td></tr>
+<tr><td>/rename [name]</td><td>重命名会话</td></tr>
+<tr><td>/add-dir &lt;path&gt;</td><td>添加工作目录</td></tr>
+<tr><td>/export [file]</td><td>导出对话</td></tr>
+<tr><td>/copy [N]</td><td>复制第 N 条回复</td></tr>
+<tr><td>/context</td><td>可视化上下文</td></tr>
+</table></div>
+
+<h3>记忆与知识</h3>
+<div class="tw"><table>
+<tr><th>命令</th><th>说明</th></tr>
+<tr><td>/memory</td><td>查看/编辑记忆</td></tr>
+<tr><td>/init</td><td>初始化项目</td></tr>
+<tr><td>/skills</td><td>列出技能</td></tr>
+<tr><td>/agents</td><td>管理 Agent</td></tr>
+</table></div>
+
+<h3>Git 与代码</h3>
+<div class="tw"><table>
+<tr><th>命令</th><th>说明</th></tr>
+<tr><td>/diff</td><td>交互式 diff</td></tr>
+<tr><td>/pr-comments [PR]</td><td>获取 PR 评论</td></tr>
+<tr><td>/security-review</td><td>安全漏洞分析</td></tr>
+<tr><td>/review</td><td>⚠️ 已弃用，需安装插件</td></tr>
+</table></div>
+
+<h3>MCP 与扩展</h3>
+<div class="tw"><table>
+<tr><th>命令</th><th>说明</th></tr>
+<tr><td>/mcp</td><td>管理 MCP 服务器</td></tr>
+<tr><td>/hooks</td><td>查看 hook 配置</td></tr>
+<tr><td>/plugin</td><td>管理插件</td></tr>
+<tr><td>/reload-plugins</td><td>重载插件</td></tr>
+<tr><td>/chrome</td><td>Chrome 集成</td></tr>
+<tr><td>/desktop, /app</td><td>在桌面应用打开</td></tr>
+<tr><td>/ide</td><td>IDE 集成</td></tr>
+<tr><td>/install-github-app</td><td>安装 GitHub App</td></tr>
+<tr><td>/install-slack-app</td><td>安装 Slack 应用</td></tr>
+</table></div>
+
+<h3>统计与洞察</h3>
+<div class="tw"><table>
+<tr><th>命令</th><th>说明</th></tr>
+<tr><td>/cost</td><td>Token 使用统计</td></tr>
+<tr><td>/usage</td><td>计划使用限制</td></tr>
+<tr><td>/stats</td><td>使用统计可视化</td></tr>
+<tr><td>/insights</td><td>会话分析报告</td></tr>
+<tr><td>/extra-usage</td><td>额外使用配置</td></tr>
+</table></div>
+
+<h3>诊断与反馈</h3>
+<div class="tw"><table>
+<tr><th>命令</th><th>说明</th></tr>
+<tr><td>/doctor</td><td>诊断安装</td></tr>
+<tr><td>/debug [desc]</td><td>排查问题</td></tr>
+<tr><td>/feedback, /bug</td><td>提交反馈</td></tr>
+</table></div>
+
+<h3>账号与集成</h3>
+<div class="tw"><table>
+<tr><th>命令</th><th>说明</th></tr>
+<tr><td>/login</td><td>登录</td></tr>
+<tr><td>/logout</td><td>登出</td></tr>
+<tr><td>/mobile, /ios, /android</td><td>下载移动应用</td></tr>
+<tr><td>/passes</td><td>分享给好友</td></tr>
+<tr><td>/upgrade</td><td>升级计划</td></tr>
+</table></div>
+
+<h3>任务与生产力</h3>
+<div class="tw"><table>
+<tr><th>命令</th><th>说明</th></tr>
+<tr><td>/tasks</td><td>后台任务</td></tr>
+<tr><td>/plan</td><td>计划模式</td></tr>
+<tr><td>/remote-control, /rc</td><td>远程控制</td></tr>
+<tr><td>/remote-env</td><td>远程环境配置</td></tr>
+</table></div>
+
+<h3>其他</h3>
+<div class="tw"><table>
+<tr><th>命令</th><th>说明</th></tr>
+<tr><td>/release-notes</td><td>更新日志</td></tr>
+<tr><td>/stickers</td><td>订购贴纸</td></tr>
+<tr><td>/voice</td><td>语音输入</td></tr>
+</table></div>
+
+<h2>模型 ID 参考</h2>
+<div class="tw"><table>
+<tr><th>模型</th><th>ID</th><th>特点</th></tr>
+<tr><td>Claude Opus 4.6</td><td>claude-opus-4-6</td><td>最强推理，适合复杂任务</td></tr>
+<tr><td>Claude Sonnet 4.6</td><td>claude-sonnet-4-6</td><td>性价比最高，日常开发首选</td></tr>
+<tr><td>Claude Haiku 4.5</td><td>claude-haiku-4-5-20251001</td><td>最快最便宜，简单任务</td></tr>
+</table></div>
+
+<h2>CLAUDE.md 配置模板</h2>
+<div class="cb"><div class="cbh"><div class="dots"><span></span><span></span><span></span></div><span class="clg">markdown</span></div>
+<pre><code class="language-markdown"># [项目名称]
+
+## 项目概述
+[简要描述项目功能和技术栈]
+
+## 技术栈
+- Language: [TypeScript/Python/etc]
+- Framework: [React/Django/etc]
+- Database: [PostgreSQL/MySQL/etc]
+
+## 开发规范
+- 代码风格: [Prettier/ESLint/Black]
+- 命名规范: [camelCase/snake_case]
+- 注释语言: [中文/英文]
+
+## 常用命令
+- 开发: `npm run dev`
+- 测试: `npm test`
+- 构建: `npm run build`
+- 格式化: `npm run format`
+
+## 重要说明
+- [安全注意事项]
+- [不能修改的文件]
+- [特殊依赖说明]</code></pre></div>
+
+<h2>常见问题 FAQ</h2>
+<div class="box note"><div class="bl">Q: Claude Code 和直接用 Claude API 有什么区别？</div><p>Claude Code 是 CLI 工具，内置了文件操作、代码执行等工具，专为开发者设计。Claude API 是底层接口，需要自己实现工具调用和对话管理。</p></div>
+
+<div class="box note"><div class="bl">Q: 如何减少 Token 消耗？</div><p>1) 使用 /compact 压缩长对话；2) CLAUDE.md 保持精简；3) 具体指令比模糊请求省 Token；4) 复杂任务分阶段处理；5) 简单任务用 Haiku 模型。</p></div>
+
+<div class="box note"><div class="bl">Q: 如何让 Claude 不重复之前犯过的错误？</div><p>使用 /memory 命令将重要约定写入记忆文件，或在 CLAUDE.md 中明确列出禁止事项。记忆会在后续会话中自动加载。</p></div>
+
+<div class="box note"><div class="bl">Q: MCP 服务器连接失败怎么办？</div><p>检查 settings.json 中的命令路径、环境变量是否正确；用 /doctor 命令诊断；查看 ~/.claude/logs/ 中的错误日志。</p></div>
+
+<div class="box note"><div class="bl">Q: 如何在 CI/CD 中使用 Claude Code？</div><p>使用 --dangerously-skip-permissions 跳过交互式确认，配合 --print 和 --output-format json 获取机器可读输出。确保 ANTHROPIC_API_KEY 在 CI 环境变量中设置。</p></div>
+
+<h2>官方资源链接</h2>
+<ul>
+  <li><a href="https://docs.anthropic.com/en/docs/claude-code" style="color:var(--acc)">Claude Code 官方文档</a></li>
+  <li><a href="https://docs.anthropic.com/en/api" style="color:var(--acc)">Anthropic API 文档</a></li>
+  <li><a href="https://modelcontextprotocol.io" style="color:var(--acc)">MCP 官方协议站</a></li>
+  <li><a href="https://github.com/anthropics/anthropic-sdk-python" style="color:var(--acc)">Python SDK GitHub</a></li>
+  <li><a href="https://github.com/anthropics/anthropic-sdk-typescript" style="color:var(--acc)">TypeScript SDK GitHub</a></li>
+  <li><a href="https://github.com/anthropics/claude-code/issues" style="color:var(--acc)">Claude Code Issues</a></li>
+</ul>
+
+<div class="chft">
+  <button class="btn" onclick="markDone(8,this)">标记完成 ✓</button>
+  <span class="dm">🎉 恭喜！您已完成全部课程</span>
+</div>
+</section>
+
+</main>
+</div>
+<div id="ov" onclick="toggleMenu()"></div>
+
+<script>
+const TOTAL = 9; // chapters 0-8
+let progress = JSON.parse(localStorage.getItem("ccg_progress") || "[]");
+
+function markDone(idx, btn) {
+  if (!progress.includes(idx)) {
+    progress.push(idx);
+    localStorage.setItem("ccg_progress", JSON.stringify(progress));
+  }
+  btn.textContent = "已完成 ✓";
+  btn.classList.add("done");
+  updateProgress();
+  document.getElementById("n" + idx).classList.add("done");
+  // Auto advance
+  if (idx < TOTAL - 1) {
+    setTimeout(() => showCh(idx + 1), 600);
+  }
+}
+
+function updateProgress() {
+  const done = progress.length;
+  const pct = Math.round(done / TOTAL * 100);
+  document.getElementById("gpf").style.width = pct + "%";
+  document.getElementById("pt").innerHTML = "<strong>" + done + "</strong> / " + TOTAL + " 完成";
+  progress.forEach(idx => {
+    const nav = document.getElementById("n" + idx);
+    if (nav) nav.classList.add("done");
+    const btn = document.querySelector("#ch" + idx + " .btn");
+    if (btn) { btn.textContent = "已完成 ✓"; btn.classList.add("done"); }
+  });
+}
+
+// Init
+document.addEventListener("DOMContentLoaded", () => {
+  if (window.hljs) {
+    hljs.configure({ ignoreUnescapedHTML: true });
+    hljs.highlightAll();
+  }
+  updateProgress();
+});
+
+function toggleMenu() {
+  const sb = document.getElementById("sb");
+  const ov = document.getElementById("ov");
+  const btn = document.getElementById("menu-btn");
+  sb.classList.toggle("open");
+  ov.classList.toggle("show");
+  btn.textContent = sb.classList.contains("open") ? "×" : "☰";
+}
+
+// Close menu when clicking a chapter
+function showCh(idx) {
+  document.querySelectorAll(".ch").forEach(el => el.classList.remove("active"));
+  document.querySelectorAll(".ni").forEach(el => el.classList.remove("active"));
+  const ch = document.getElementById("ch" + idx);
+  const nav = document.getElementById("n" + idx);
+  if (ch) ch.classList.add("active");
+  if (nav) nav.classList.add("active");
+  window.scrollTo(0, 0);
+  // Re-run highlight on newly visible code blocks
+  if (window.hljs) {
+    ch.querySelectorAll("pre code").forEach(el => {
+      if (!el.dataset.highlighted) hljs.highlightElement(el);
+    });
+  }
+  // Close mobile menu if open
+  const sb = document.getElementById("sb");
+  if (sb.classList.contains("open")) toggleMenu();
+}
+</script>
+</body>
+</html>

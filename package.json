@@ -1,0 +1,26 @@
+{
+  "name": "coder-landscape",
+  "version": "1.0.0",
+  "description": "Programming World Landscape - 66 Programming Directions Guide",
+  "main": "generate-coder-landscape.js",
+  "scripts": {
+    "generate-doc": "node generate-coder-landscape.js",
+    "serve": "npx serve coder-landscape.html",
+    "v2:init": "node v2/scripts/init-db.js",
+    "v2:import": "node v2/scripts/import-data.js",
+    "v2:build": "node v2/scripts/build.js",
+    "v2:preview": "npx serve v2/output/coder-landscape-v2.html",
+    "v2:add-chapter": "node v2/scripts/add-chapter.js"
+  },
+  "dependencies": {
+    "docx": "^9.0.0"
+  },
+  "keywords": [
+    "programming",
+    "guide",
+    "indie-developer",
+    "career"
+  ],
+  "author": "",
+  "license": "MIT"
+}
