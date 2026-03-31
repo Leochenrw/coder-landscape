@@ -772,7 +772,7 @@ function renderSectionContent(code, content) {
       if (!Array.isArray(content) || content.length === 0) return '<div class="section-empty">暂无内容</div>';
       return `<table class="data-table">
                         <thead>
-                            <tr><th>排序</th><th>方式</th><th>说明</th><th>个人能干</th><th>见效速度</th><th>参考收入</th></tr>
+                            <tr><th>排序</th><th>方式</th><th>说明</th><th>个人能干</th><th>变现周期</th><th>参考收入</th></tr>
                         </thead>
                         <tbody>
                             ${content.map(row => `<tr>${row.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}
@@ -1104,7 +1104,7 @@ function renderSectionDocx(code, content) {
     case 's07':
       if (Array.isArray(content) && content.length > 0) {
         const headerRow = new TableRow({
-          children: ['排序', '方式', '说明', '个人能干', '见效速度', '参考收入'].map(h => new TableCell({
+          children: ['排序', '方式', '说明', '个人能干', '变现周期', '参考收入'].map(h => new TableCell({
             children: [new Paragraph({ text: h, size: 20 })],
             shading: { fill: '333333' }
           }))

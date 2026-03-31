@@ -220,7 +220,7 @@ function generateChapterContent(chapter) {
   // 07. Monetization
   content.push(createHeading("07 · 变现路径", 2));
   content.push(createSimpleTable(
-    ["排序", "方式", "说明", "个人", "收入类型", "见效速度", "参考收入"],
+    ["排序", "方式", "说明", "个人", "收入类型", "变现周期", "参考收入"],
     [
       ["1", "产品/服务", "开发工具或SaaS产品", "🔴", "被动", "3-6月", "几千-几十万/年"],
       ["2", "技术咨询", "按小时或项目收费", "🔴", "主动", "1-4周", "1万-10万/单"],
