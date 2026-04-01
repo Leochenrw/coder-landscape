@@ -5,7 +5,7 @@
   s01: {
     professional: "DevOps（Development and Operations）是一种融合软件开发（Dev）与IT运维（Ops）的文化、实践和工具集，旨在缩短系统开发生命周期，同时提供持续高质量的软件交付。核心实践包括CI/CD持续集成部署、基础设施即代码（IaC）、容器化、监控告警、自动化测试等，强调开发与运维的协作、自动化和反馈循环。",
     simple: "就像餐厅后厨的流水线和品控——以前是厨师（开发）做完菜直接扔给服务员（运维）端出去，出问题互相甩锅。DevOps是两人一起设计流程：自动洗菜切菜（自动化构建）、每道菜都尝一下（自动化测试）、热菜自动传送到餐桌（自动部署），出问题一起担责。",
-    status2026: "2026年DevOps已进入平台工程（Platform Engineering）时代，AI Agent深度融入运维流程：自动生成Terraform配置、智能诊断告警根因、AIOps实现预测性维护。GitOps成为标配，ArgoCD/Flux接管K8s部署。DevSecOps强制落地，安全扫描嵌入CI/CD每个环节。多云管理成为刚需，FinOps成本优化受企业重视。"
+    status2026: "2026年DevOps已进入平台工程（Platform Engineering）时代，AI Agent深度融入运维流程：自动生成Terraform配置、智能诊断告警根因、AIOps实现预测性维护。GitOps成为标配，ArgoCD/Flux接管K8s部署。DevSecOps加速普及，安全扫描正成为CI/CD管道的标准实践。多云管理成为刚需，FinOps成本优化受企业重视。"
   },
   s02: [
     "设计并维护CI/CD流水线（代码提交→自动构建→测试→部署）",
