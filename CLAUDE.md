@@ -12,17 +12,22 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## 运行命令
 
 ```bash
+# 安装依赖
+npm install
+
+# 本地预览网页
+npx serve coder-landscape.html
+
 # 生成横版A4 Word文档
 node generate-coder-landscape.js
 # 输出：coder-landscape-guide.docx
 
-# 本地预览网页
-npx serve coder-landscape.html
-```
-
-安装依赖（docx包只能本地安装）：
-```bash
-npm install
+# v2 JSON管道
+npm run v2:init       # 初始化空chapters.json
+npm run v2:import     # 从HTML提取内容到JSON
+npm run v2:build      # 从JSON生成HTML+Word
+npm run v2:preview    # 预览v2生成的网页
+npm run v2:add-chapter  # CLI添加新章节
 ```
 
 ## 文档规格
@@ -273,7 +278,9 @@ npm install
 - 页脚居中页码
 - 单色调色板（#222222, #333333等）
 
-## AI搜索功能规格
+## AI功能规格
+
+### AI搜索
 
 ```javascript
 // 搜索框组件
@@ -282,7 +289,7 @@ npm install
 - 提示文字："AI回答仅供参考，关键决策请核实官方文档"
 
 // API调用
-- 使用Claude API (claude-3-5-sonnet-20241022)
+- 使用Claude API（模型ID在代码中配置）
 - 携带当前章节内容作为context
 - temperature: 0.3（降低幻觉）
 
@@ -291,30 +298,83 @@ npm install
 - 法律相关内容显示："请咨询专业律师，本文不构成法律建议"
 ```
 
+### AI目标规划
+
+浮动按钮触发，用户设定目标后AI分析并推荐学习路径。包含输入弹窗、分析动画和结果展示区域。相关CSS类：`ai-float-btn`、`ai-input-modal`、`ai-user-goal`。
+
 ## 文件结构
 
 ```
 coderstudy/
-├── CLAUDE.md                      # 本文件
-├── generate-coder-landscape.js    # Word生成脚本
-├── coder-landscape.html           # 主网页文件
-├── package.json                   # 依赖
-├── /chapters                      # 章节源文件（可选）
-│   ├── 01-frontend.md
-│   ├── 02-mobile.md
-│   └── ...
-└── /assets                        # 静态资源
-    ├── logo.png
-    └── styles.css
+├── CLAUDE.md                         # 本文件
+├── README.md                         # 项目说明
+├── package.json                      # 依赖 + npm脚本
+├── generate-coder-landscape.js       # Word生成脚本（模板内容）
+├── coder-landscape.html              # 主网页文件（~9874行）
+├── chapters_39_45_content.js         # 外部章节内容（被HTML引用）
+├── chapters_46_52_content.js
+├── chapters_53_58_content.js
+├── chapters_59_66_content.js
+├── chapters/                         # 少量草稿文件
+│   ├── 04-backend.md
+│   └── chapter10-devops.js
+├── v2/                               # JSON管道（v2构建系统）
+│   ├── package.json
+│   ├── data/chapters.json            # 章节JSON数据库（386KB）
+│   ├── output/                       # 构建输出目录
+│   ├── scripts/
+│   │   ├── init-db.js                # 初始化空数据库
+│   │   ├── import-data.js            # 从HTML提取内容到JSON
+│   │   ├── build.js                  # 从JSON生成HTML+Word
+│   │   └── add-chapter.js            # CLI章节管理工具
+│   └── templates/                    # HTML模板
+└── (根目录大量 check_*.js / diagnose_*.js 为调试脚本，可忽略)
 ```
 
 ## 生成流程
 
-1. **读取模板**：读取CLAUDE.md获取规格
-2. **遍历章节**：按66章目录逐个生成内容
-3. **渲染HTML**：生成带导航和交互的网页
-4. **渲染DOCX**：使用docx库生成Word文档
-5. **输出文件**：保存到根目录
+### v1（当前主要方式）
+
+HTML内容直接在 `coder-landscape.html` 内联维护，Word生成器只产生模板占位内容：
+
+1. 手动编辑 `coder-landscape.html` 中的 `chapterContent` 对象
+2. 对于39-66章，编辑外部 `chapters_XX_YY_content.js` 文件
+3. `generate-coder-landscape.js` 生成Word文档（仅模板骨架）
+
+### v2（JSON管道，实验性）
+
+通过 `v2/` 目录的JSON管道生成两种输出：
+
+1. `npm run v2:import` — 从HTML的 `chapterContent` 提取内容到 `v2/data/chapters.json`
+2. 在 `chapters.json` 中编辑章节数据
+3. `npm run v2:build` — 从JSON同时生成HTML和Word文档
+4. `npm run v2:preview` — 预览生成的v2网页
+
+## HTML架构
+
+`coder-landscape.html`（~9874行）是一个单页应用，结构如下：
+
+| 行号范围 | 内容 |
+|---------|------|
+| 1-~2394 | CSS（深色主题，CSS变量定义） |
+| ~2395-2620 | HTML body（进度条、header、侧边栏、内容区、AI弹窗） |
+| 2621-2624 | 外部 `<script>` 引入39-66章内容 |
+| 2625-~9874 | 主JS块 |
+
+主JS块包含：
+- `chapters` 数组 — 66章元数据（id、标题、分类）
+- `chapterContent` 对象 — 1-38章内容内联在此
+- `Object.assign(chapterContent, window.chapterContentXXtoYY)` — 合并39-66章外部内容
+- `generateChapterHTML(ch)` — 根据内容完整度决定详细渲染还是模板渲染
+- LocalStorage — 阅读进度、收藏、标记
+- 侧边栏导航渲染、搜索、AI功能
+
+### 内容加载模型
+
+- **1-38章**：内容直接内联在HTML的 `chapterContent` 对象中
+- **39-66章**：内容在外部 `chapters_XX_YY_content.js` 文件中，通过 `<script>` 标签加载，用 `Object.assign` 合并
+- **渲染判断**：`generateChapterHTML(ch)` 检查 `s01/s02/s03/s05/s06/s07/s09/s10/s12` 字段，齐全则用详细渲染，否则用模板
+- **Word生成器**：`generate-coder-landscape.js` 始终使用模板占位内容，不读取HTML中的详细内容
 
 ## 注意事项
 

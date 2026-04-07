@@ -22,5 +22,8 @@
     "career"
   ],
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "acorn": "^8.16.0"
+  }
 }

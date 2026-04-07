@@ -30,3 +30,23 @@ npm-debug.log*
 # Temporary files
 *.tmp
 *.temp
+
+# Debug/temp scripts (check, diagnose, find, test, trace, etc.)
+check_*.js
+check_*.py
+count_*.js
+debug_*.js
+debug_*.html
+diagnose*.js
+find_*.js
+test_*.js
+trace_*.js
+validate_syntax.js
+verify_backticks.js
+deep_check.js
+full_check.js
+extracted_script.js
+inline*.js
+snippet*.js
+script_start.txt
+page-snapshot.html
